@@ -1,0 +1,24 @@
+
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: latest
+    commands:
+      - echo install yarn...
+  prebuild:
+    commands:
+      - echo "Installing dependencies..."
+      - yarn install
+      - echo "Running tests... "
+      - yarn test
+  build:
+    commands:
+      - echo "Creating producion build ..."
+      - yarn run build
+      - echo Build completed on `date`
+artifacts:
+  type: zip
+  files:
+    - build
