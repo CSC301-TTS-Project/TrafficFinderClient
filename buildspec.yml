@@ -12,7 +12,7 @@ phases:
       - echo "Installing dependencies..."
       - yarn install
       - echo "Running tests... "
-      - yarn test
+      - CI=true yarn test --coverage
   build:
     commands:
       - echo "Creating producion build ..."
