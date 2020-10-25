@@ -7,7 +7,7 @@ phases:
       nodejs: latest
     commands:
       - echo install yarn...
-  prebuild:
+  pre_build:
     commands:
       - echo "Installing dependencies..."
       - yarn install
