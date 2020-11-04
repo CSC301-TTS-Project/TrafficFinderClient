@@ -1,7 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
-import { getHereToken, getMapboxToken } from './mapActions';
-import "./Map.module.css";
+import "./Sidebar.module.css";
 
 export function Map() {
     const mapRef = useRef(null);
