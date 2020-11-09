@@ -1,7 +1,6 @@
 import React from 'react';
 
-export function TimePeriod() {
-
+export default function TimePeriod() {
   return (
     <>
       <p>
