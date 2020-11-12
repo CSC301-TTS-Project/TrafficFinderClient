@@ -1,42 +1,35 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React from 'react';
 import mapboxgl from 'mapbox-gl';
 import { getHereToken, getMapboxToken } from './mapActions';
 import "./Map.module.css";
 
-export function Map() {
-    const mapRef = useRef(null);
-    const [lng, setLng] = useState(-79.3832);
-    const [lat, setLat] = useState(43.6532);
-    const [zoom, setZoom] = useState(15.0);
 
-    useEffect(() => {
-        mapboxgl.accessToken = getMapboxToken();
-        const map = new mapboxgl.Map({
-            container: mapRef.current,
-            style: 'mapbox://styles/mapbox/streets-v11',
-            center: [lng, lat],
-            zoom: zoom,
-            transformRequest: function (url, resourceType) {
-                if (url.match('vector.*.hereapi.com')) {
-                    return {
-                        url: url,
-                        headers: { 'Authorization': 'Bearer ' + getHereToken() }
-                    }
-                }
-            }
-        });
-        map.on('move', () => {
-            setLng(map.getCenter().lng.toFixed(4));
-            setLat(map.getCenter().lat.toFixed(4));
-            setZoom(map.getZoom().toFixed(2));
-        });
-        map.once('load', () => {
-            map.resize();
-        });
-        return () => map.remove();
-    }, []);
+mapboxgl.accessToken = getMapboxToken();
 
-    return (
-        <div className='map-container' ref={mapRef}/>
-    )
+class Map extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      lat: 43.6532,
+      lng: -79.3832,
+      zoom: 15
+    };
+  }
+
+  componentDidMount() {
+    this.map = new mapboxgl.Map({
+      container: this.container,
+      style: 'mapbox://styles/mapbox/streets-v9',
+      center: [this.state.lng, this.state.lat],
+      zoom: this.state.zoom
+    })
+  }
+  componentWillUnmount() {
+    this.map.remove()
+  }
+  render() {
+    return <div className={'map'} ref={e => (this.container = e)} />
+  }
 }
+
+export default Map
