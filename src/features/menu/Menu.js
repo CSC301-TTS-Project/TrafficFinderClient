@@ -10,13 +10,22 @@ export default class Menu extends Component {
       <div className={styles.menuContainer}>
         <div className={styles.sideBar}></div>
         <div className={styles.menu}>
-          <DaysOfWeek />
-          <RangeSelect title="Hour Range" startVal="0:700" endVal="21:00" />
-          <RangeSelect
-            title="Date Range"
-            startVal="2020/09/01/"
-            endVal="2020/09/17"
-          />
+          <div className={styles.menuSelect}>
+            <DaysOfWeek />
+            <div>
+              <RangeSelect title="Hour Range" startVal="0:700" endVal="21:00" />
+              <RangeSelect
+                title="Date Range"
+                startVal="2020/09/01/"
+                endVal="2020/09/17"
+              />
+            </div>
+            <div>
+              <MenuButton name="Link Nodes" />
+              <MenuButton name="Select Return Values" />
+              <MenuButton name="Download Data as CSV" />
+            </div>
+          </div>
         </div>
       </div>
     );

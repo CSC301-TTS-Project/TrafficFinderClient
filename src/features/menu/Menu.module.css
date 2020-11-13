@@ -13,7 +13,7 @@
 .menu {
   height: 100vh;
   display: inline-block;
-  width: 390px;
+  overflow: hidden;
   background-color: #f6f6f6;
   padding: 0 20px;
   box-sizing: border-box;
@@ -22,9 +22,13 @@
 .menuSelect {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  position: relative;
+  padding-top: 20%;
+  height: 80%;
   width: 100%;
+  justify-content: space-around;
 }
+
 .selectDays {
   width: 100%;
   display: flex;
@@ -45,11 +49,6 @@
   cursor: pointer;
 }
 
-.dayBtn:hover {
-  transition: ease-in-out 150ms;
-  background-color: #9a21f9;
-  color: #ffffff;
-}
 .dayBtnActive {
   cursor: pointer;
   width: 28px;
@@ -73,4 +72,27 @@
   width: 40%;
   text-align: center;
   height: 2em;
+}
+
+.menuBtn {
+  background: #eaeaf2;
+  text-align: center;
+  border: none;
+  width: 75%;
+  padding: 5px 0px;
+  cursor: pointer;
+  margin: 2em 0px;
+  transition: ease-in-out 150ms;
+}
+
+.menuBtnContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.dayBtn:hover,
+.menuBtn:hover {
+  transition: ease-in-out 150ms;
+  background-color: #9a21f9;
+  color: #ffffff;
 }
