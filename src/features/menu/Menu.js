@@ -4,6 +4,7 @@ import DaysOfWeek from "./DaysOfWeek";
 import HourRange from "./RangeSelect.js";
 import RangeSelect from "./RangeSelect.js";
 import MenuButton from "./MenuButton";
+import ChevronRightOutlinedIcon from "@material-ui/icons/ChevronRightOutlined";
 export default class Menu extends Component {
   render() {
     return (
