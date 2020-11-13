@@ -1,0 +1,68 @@
+.menuContainer {
+  position: absolute;
+  z-index: 100;
+  height: 100vh;
+  width: 500px;
+}
+.sideBar {
+  display: inline-block;
+  background-color: #eaeaf2;
+  width: 110px;
+  height: 100vh;
+}
+.menu {
+  height: 100vh;
+  display: inline-block;
+  width: 390px;
+  background-color: #f6f6f6;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.menuSelect {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+.selectDays {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.dayBtn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #eae8e8;
+  border-radius: 50%;
+  color: #a6a6a6;
+  text-align: center;
+  transition: ease-in-out 150ms;
+}
+
+.dayBtn:hover {
+  transition: ease-in-out 150ms;
+  background-color: #9a21f9;
+  color: #ffffff;
+}
+.dayBtnActive {
+  background-color: #9a21f9;
+  color: #ffffff;
+}
+
+.tilda {
+  padding: 0 5%;
+  font-size: 1.5rem;
+}
+.rangeInput {
+  border: none;
+  background: #ffffff;
+  box-sizing: border-box;
+  width: 40%;
+  text-align: center;
+  height: 2em;
+}
