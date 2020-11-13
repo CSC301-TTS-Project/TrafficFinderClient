@@ -28,7 +28,9 @@
   width: 100%;
   justify-content: space-around;
 }
-
+.menuTitle {
+  color: #b5b5fe;
+}
 .selectDays {
   width: 100%;
   display: flex;

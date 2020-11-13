@@ -8,7 +8,7 @@ export default class RangeSelect extends Component {
     const { title, startVal, endVal } = this.props;
     return (
       <div>
-        <h4 className={styles.selectTitle}>{title}</h4>
+        <h4 className={styles.menuTitle}>{title}</h4>
         <input type="text" value={startVal} className={styles.rangeInput} />
         <span className={styles.tilda}>~</span>
         <input type="text" value={endVal} className={styles.rangeInput} />
