@@ -92,6 +92,15 @@
   justify-content: center;
 }
 
+.menuChevron {
+  position: fixed;
+  left: 30px;
+  background: #b5b5fe;
+  border-radius: 50%;
+  padding: 5px;
+  top: 5vh;
+}
+
 .dayBtn:hover,
 .menuBtn:hover {
   transition: ease-in-out 150ms;

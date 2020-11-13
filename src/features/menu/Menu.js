@@ -9,6 +9,10 @@ export default class Menu extends Component {
   render() {
     return (
       <div className={styles.menuContainer}>
+        <ChevronRightOutlinedIcon
+          fontSize="large"
+          className={styles.menuChevron}
+        />
         <div className={styles.sideBar}></div>
         <div className={styles.menu}>
           <div className={styles.menuSelect}>
