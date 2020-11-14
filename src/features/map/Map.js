@@ -2,6 +2,7 @@ import React from 'react';
 import mapboxgl from 'mapbox-gl';
 import { getHereToken, getMapboxToken } from './mapActions';
 import "./Map.module.css";
+import Menu from "../menu/Menu"
 
 
 mapboxgl.accessToken = getMapboxToken();
@@ -28,7 +29,10 @@ class Map extends React.Component {
     this.map.remove()
   }
   render() {
-    return <div className={'map'} ref={e => (this.container = e)} />
+    return <div className={'map'} ref={e => (this.container = e)} >
+      <Menu/>
+
+    </div>
   }
 }
 

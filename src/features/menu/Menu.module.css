@@ -1,0 +1,138 @@
+.menuContainer {
+  position: absolute;
+  z-index: 100;
+  height: 100vh;
+  width: 500px;
+  transform: translateX(0%);
+  transition: all ease 200ms;
+}
+
+.menuContainerClosed {
+  position: absolute;
+  z-index: 100;
+  height: 100vh;
+  width: 500px;
+  transform: translateX(-110%);
+  transition: all ease 200ms;
+}
+
+.sideBar {
+  display: inline-block;
+  background-color: #eaeaf2;
+  width: 110px;
+  height: 100vh;
+}
+
+.menu {
+  height: 100vh;
+  display: inline-block;
+  overflow: hidden;
+  background-color: #f6f6f6;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.menuSelect {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-top: 20%;
+  height: 80%;
+  width: 100%;
+  justify-content: space-around;
+}
+.menuTitle {
+  color: #b5b5fe;
+}
+.selectDays {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.dayBtn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #eae8e8;
+  border-radius: 50%;
+  color: #a6a6a6;
+  text-align: center;
+  transition: ease-in-out 150ms;
+  cursor: pointer;
+}
+
+.dayBtnActive {
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: #9a21f9;
+  color: #ffffff;
+}
+
+.tilda {
+  padding: 0 5%;
+  font-size: 1.5rem;
+}
+.rangeInput {
+  border: none;
+  background: #ffffff;
+  box-sizing: border-box;
+  width: 40%;
+  text-align: center;
+  height: 2em;
+}
+
+.menuBtn {
+  background: #eaeaf2;
+  text-align: center;
+  border: none;
+  width: 75%;
+  padding: 5px 0px;
+  cursor: pointer;
+  margin: 2em 0px;
+  transition: ease-in-out 150ms;
+}
+
+.menuBtnContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.menuChevronOpen {
+  position: fixed;
+  transform: rotate(-180deg);
+  transition: all ease-in-out 150ms;
+  left: 30px;
+  background: #b5b5fe;
+  border-radius: 50%;
+  padding: 5px;
+  top: 5vh;
+  cursor: pointer;
+  z-index: 10000;
+}
+.menuChevron {
+  position: fixed;
+  transform: rotate(0deg);
+  transition: all ease-in-out 150ms;
+  left: 30px;
+  background: #b5b5fe;
+  border-radius: 50%;
+  padding: 5px;
+  top: 5vh;
+  cursor: pointer;
+  z-index: 10000;
+}
+
+.dayBtn:hover,
+.menuBtn:hover {
+  transition: ease-in-out 150ms;
+  background-color: #9a21f9;
+  color: #ffffff;
+}
