@@ -1,12 +1,12 @@
 import React from 'react';
 import './App.css';
-import Map from "./features/map/Map"
+import Map from "../features/map/Map"
 
 function App() {
   return (
-    <div className="App">
-      <Map/>
-    </div>
+      <div className="App">
+        <Map/>
+      </div>
   );
 }
 
