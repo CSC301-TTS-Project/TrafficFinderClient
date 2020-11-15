@@ -11,8 +11,8 @@ class Map extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      lat: 43.6532,
-      lng: -79.3832,
+      lat: 43.659880,
+      lng: -79.390342,
       zoom: 15
     };
   }
