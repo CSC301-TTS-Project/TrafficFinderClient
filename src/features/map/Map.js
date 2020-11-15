@@ -11,8 +11,8 @@ class Map extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      lat: 43.6532,
-      lng: -79.3832,
+      lat: 43.659880,
+      lng: -79.390342,
       zoom: 15
     };
   }
@@ -24,6 +24,46 @@ class Map extends React.Component {
       center: [this.state.lng, this.state.lat],
       zoom: this.state.zoom
     })
+
+    this.map.on("load", ()=> {
+      this.map.addSource("lines", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          // can draw multiple lines by including multiple objects inside features list
+          features: [
+            {
+              type: "Feature",
+              properties: {
+                // color: "#B5B5FE" // soft purple
+                color: "#9A21F9" // stronger purple
+              },
+              geometry: {
+                type: "LineString",
+                coordinates: [                  
+                  // [long, lat]
+                  [ -79.396000, 43.658716],
+                  [-79.399877, 43.667489]
+                ]
+              }
+            }
+          ]
+        }
+      });
+        this.map.addLayer({
+          id: "lines",
+          type: "line",
+          source: "lines",
+          paint: {
+            "line-width": 3,
+            // Use a get expression (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-get)
+            // to set the line-color to a feature property value.
+            "line-color": ["get", "color"]
+          }
+        });
+      });
+    
+  
   }
   componentWillUnmount() {
     this.map.remove()
