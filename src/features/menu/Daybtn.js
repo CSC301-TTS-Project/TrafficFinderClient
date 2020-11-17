@@ -5,6 +5,7 @@ export default class Daybtn extends Component {
     super(props);
     const { day } = props
     this.state = {
+      // Tues-Thurs should be active for default time period
       active: day === "T" || day === "W"  ? true : false,
     };
   }
@@ -14,9 +15,7 @@ export default class Daybtn extends Component {
   render() {
     const { day } = this.props;
 
-    // if({
-    //   this.setState({active: true})
-    // }
+
     return (
       <div
         onClick={this.handleOnClick}
