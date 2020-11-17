@@ -71,14 +71,18 @@ class Map extends React.Component {
     //   .setLngLat([-79.399877, 43.667489])
     //   .addTo(this.map);
 
-    this.map.on('click', ()=>this.addMarker(this.map));    
+    this.map.on('click', (e)=>{
+      console.log("from e", e.lngLat)
+      this.addMarker(this.map, e.lngLat)
+    });    
   }
 
 
-  addMarker(map){
+  addMarker(map, lngLat){
     console.log("add marker")
+    const {lng, lat} = lngLat
     new mapboxgl.Marker()
-      .setLngLat([-79.399877, 43.667489])
+      .setLngLat([lng, lat])
       .addTo(this.map);
   }
 
