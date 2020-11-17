@@ -57,7 +57,6 @@ export default class Menu extends Component {
                 />
               </div>
               <div>
-                <MenuButton name="Link Nodes" />
                 <MenuButton name="Select Return Values" />
                 <MenuButton name="Download Data as CSV" />
               </div>
