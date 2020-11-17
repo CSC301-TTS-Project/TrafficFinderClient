@@ -25,6 +25,12 @@ class Map extends React.Component {
       zoom: this.state.zoom
     })
 
+
+    // Example segment connecting to nodes (markers)
+    const startSegment = [ -79.396000, 43.658716]
+    const endSegment = [-79.399877, 43.667489]
+
+    // add line/segment
     this.map.on("load", ()=> {
       this.map.addSource("lines", {
         type: "geojson",
@@ -42,8 +48,8 @@ class Map extends React.Component {
                 type: "LineString",
                 coordinates: [                  
                   // [long, lat]
-                  [ -79.396000, 43.658716],
-                  [-79.399877, 43.667489]
+                  startSegment,
+                  endSegment
                 ]
               }
             }
@@ -63,24 +69,25 @@ class Map extends React.Component {
         });
       });
 
+    // add markers/nodes
     new mapboxgl.Marker()
-      .setLngLat([-79.396000, 43.658716])
+      .setLngLat(startSegment)
       .addTo(this.map);
 
-    // new mapboxgl.Marker()
-    //   .setLngLat([-79.399877, 43.667489])
-    //   .addTo(this.map);
+    new mapboxgl.Marker()
+      .setLngLat(endSegment)
+      .addTo(this.map);
 
     this.map.on('click', (e)=>{
-      console.log("from e", e.lngLat)
-      this.addMarker(this.map, e.lngLat)
+      this.addMarker(e.lngLat)
     });    
   }
 
 
-  addMarker(map, lngLat){
-    console.log("add marker")
+  addMarker(lngLat){
     const {lng, lat} = lngLat
+    console.log("selected lng: ", lng)
+    console.log("selected lat: ", lat)
     new mapboxgl.Marker()
       .setLngLat([lng, lat])
       .addTo(this.map);
