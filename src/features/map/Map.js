@@ -26,7 +26,7 @@ class Map extends React.Component {
     })
 
 
-    // Example segment connecting to nodes (markers)
+    // Example of segment connecting nodes (markers)
     const startSegment = [ -79.396000, 43.658716]
     const endSegment = [-79.399877, 43.667489]
 
@@ -63,7 +63,7 @@ class Map extends React.Component {
           paint: {
             "line-width": 3,
             // Use a get expression (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-get)
-            // to set the line-caolor to a feature property value.
+            // to set the line-color to a feature property value.
             "line-color": ["get", "color"]
           }
         });
@@ -97,7 +97,6 @@ class Map extends React.Component {
     this.map.remove()
   }
   render() {
-
     return <div className={'map'} ref={e => (this.container = e)} >
       <Menu/>
 
