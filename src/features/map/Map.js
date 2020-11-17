@@ -63,11 +63,11 @@ class Map extends React.Component {
         });
       });
 
-    const startMarker = new mapboxgl.Marker()
+    new mapboxgl.Marker()
       .setLngLat([-79.396000, 43.658716])
       .addTo(this.map);
 
-    const endMarker = new mapboxgl.Marker()
+    new mapboxgl.Marker()
       .setLngLat([-79.399877, 43.667489])
       .addTo(this.map);
     
