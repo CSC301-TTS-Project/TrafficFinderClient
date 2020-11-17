@@ -76,9 +76,9 @@
   color: #ffffff;
 }
 
-.tilda {
+.textRange {
   padding: 0 5%;
-  font-size: 1.5rem;
+  font-size: 0.8rem;
 }
 .rangeInput {
   border: none;
@@ -130,7 +130,12 @@
   z-index: 10000;
 }
 
-.dayBtn:hover,
+.dayBtn:hover{
+  transition: ease-in-out 150ms;
+  background-color: grey;
+  color: #ffffff;
+}
+
 .menuBtn:hover {
   transition: ease-in-out 150ms;
   background-color: #9a21f9;

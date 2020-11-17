@@ -3,8 +3,10 @@ import styles from "./Menu.module.css";
 export default class Daybtn extends Component {
   constructor(props) {
     super(props);
+    const { day } = props
     this.state = {
-      active: false,
+      // Tues-Thurs should be active for default time period
+      active: day === "T" || day === "W"  ? true : false,
     };
   }
   handleOnClick = () => {
@@ -12,6 +14,7 @@ export default class Daybtn extends Component {
   };
   render() {
     const { day } = this.props;
+
 
     return (
       <div

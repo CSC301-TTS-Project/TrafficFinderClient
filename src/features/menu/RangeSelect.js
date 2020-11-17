@@ -10,7 +10,7 @@ export default class RangeSelect extends Component {
       <div>
         <h4 className={styles.menuTitle}>{title}</h4>
         <input type="text" value={startVal} className={styles.rangeInput} />
-        <span className={styles.tilda}>~</span>
+        <span className={styles.textRange}>to</span>
         <input type="text" value={endVal} className={styles.rangeInput} />
       </div>
     );
