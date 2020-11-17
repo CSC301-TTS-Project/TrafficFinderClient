@@ -48,7 +48,7 @@ export default class Menu extends Component {
                 <RangeSelect
                   title="Hour Range"
                   startVal="0:700"
-                  endVal="21:00"
+                  endVal="10:00"
                 />
                 <RangeSelect
                   title="Date Range"
