@@ -13,7 +13,7 @@ class Map extends React.Component {
     this.state = {
       lat: 43.659880,
       lng: -79.390342,
-      zoom: 15
+      zoom: 14
     };
   }
 
@@ -57,18 +57,26 @@ class Map extends React.Component {
           paint: {
             "line-width": 3,
             // Use a get expression (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-get)
-            // to set the line-color to a feature property value.
+            // to set the line-caolor to a feature property value.
             "line-color": ["get", "color"]
           }
         });
       });
+
+    const startMarker = new mapboxgl.Marker()
+      .setLngLat([-79.396000, 43.658716])
+      .addTo(this.map);
+
+    const endMarker = new mapboxgl.Marker()
+      .setLngLat([-79.399877, 43.667489])
+      .addTo(this.map);
     
-  
   }
   componentWillUnmount() {
     this.map.remove()
   }
   render() {
+
     return <div className={'map'} ref={e => (this.container = e)} >
       <Menu/>
 
