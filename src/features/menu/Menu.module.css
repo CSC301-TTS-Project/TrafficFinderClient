@@ -141,3 +141,9 @@
   background-color: #9a21f9;
   color: #ffffff;
 }
+
+.saveDataBtn {
+  transition: ease-in-out 150ms;
+  background: #9A21F9;
+  color: #ffffff;
+}

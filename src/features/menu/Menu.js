@@ -3,6 +3,7 @@ import styles from "./Menu.module.css";
 import DaysOfWeek from "./DaysOfWeek";
 import RangeSelect from "./RangeSelect.js";
 import MenuButton from "./MenuButton";
+import DownloadDataButton from './DownloadDataButton';
 import ChevronRightOutlinedIcon from "@material-ui/icons/ChevronRightOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -58,7 +59,7 @@ export default class Menu extends Component {
               </div>
               <div>
                 <MenuButton name="Select Return Values" />
-                <MenuButton name="Download Data as CSV" />
+                <DownloadDataButton/>
               </div>
             </div>
           </div>
