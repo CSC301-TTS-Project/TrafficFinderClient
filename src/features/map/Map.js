@@ -79,10 +79,35 @@ class Map extends React.Component {
       .addTo(this.map);
 
     this.map.on('click', (e)=>{
-      this.addMarker(e.lngLat)
+      // this.addMarker(e.lngLat)
+      this.addToRoute(e.lngLat, 0, 0)
     });    
   }
 
+  addToRoute(lngLat, route, index){
+  	const {lng, lat} = lngLat
+  	const body = {
+    		index,
+    		route,
+    		lat,
+    		lng
+    	}
+    fetch("http://127.0.0.1:8080/api/insertNode", {
+    	method:"POST",
+    	body: JSON.stringify(body)
+    }).then((response) => {
+    	if(response.status != 200){
+    		console.log("There was a problem, Status code: " + response.status)
+    		return
+    	}
+    	response.json().then((data) => {
+    		console.log(JSON.parse(data))
+    		// addMarker()
+    	})
+    }).catch((error) => {
+    	console.log("Fetch error " + error)
+    })
+  }
 
   addMarker(lngLat){
     const {lng, lat} = lngLat
@@ -91,6 +116,55 @@ class Map extends React.Component {
     new mapboxgl.Marker()
       .setLngLat([lng, lat])
       .addTo(this.map);
+  }
+
+  deleteFromRoute(route, index){
+  	const body = {
+		index,
+		route
+	}
+    fetch("http://127.0.0.1:8080/api/deleteNode", {
+    	method:"DELETE",
+    	body: JSON.stringify(body)
+    }).then((response) => {
+    	if(response.status != 200){
+    		console.log("There was a problem, Status code: " + response.status)
+    		return
+    	}
+    	response.json().then((data) => {
+    		console.log(JSON.parse(data))
+    		// removeMarker()
+    	})
+    }).catch((error) => {
+    	console.log("Fetch error " + error)
+    })
+  }
+
+
+    modifyRoute(lngLat, route, index){
+  	const {lng, lat} = lngLat
+  	const body = {
+		index,
+		route,
+		lat,
+		lng
+	}
+    fetch("http://127.0.0.1:8080/api/modifyNode", {
+    	method:"PATCH",
+    	body: JSON.stringify(body)
+    }).then((response) => {
+    	if(response.status != 200){
+    		console.log("There was a problem, Status code: " + response.status)
+    		return
+    	}
+    	response.json().then((data) => {
+    		console.log(JSON.parse(data))
+    		// removeMarker()
+    		// addMarker()
+    	})
+    }).catch((error) => {
+    	console.log("Fetch error " + error)
+    })
   }
 
   componentWillUnmount() {
