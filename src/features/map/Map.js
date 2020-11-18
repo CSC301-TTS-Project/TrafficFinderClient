@@ -13,7 +13,7 @@ class Map extends React.Component {
     this.state = {
       lat: 43.659880,
       lng: -79.390342,
-      zoom: 15
+      zoom: 14
     };
   }
 
@@ -25,6 +25,12 @@ class Map extends React.Component {
       zoom: this.state.zoom
     })
 
+
+    // Example of segment connecting nodes (markers)
+    const startSegment = [ -79.396000, 43.658716]
+    const endSegment = [-79.399877, 43.667489]
+
+    // add line/segment
     this.map.on("load", ()=> {
       this.map.addSource("lines", {
         type: "geojson",
@@ -42,8 +48,8 @@ class Map extends React.Component {
                 type: "LineString",
                 coordinates: [                  
                   // [long, lat]
-                  [ -79.396000, 43.658716],
-                  [-79.399877, 43.667489]
+                  startSegment,
+                  endSegment
                 ]
               }
             }
@@ -62,9 +68,31 @@ class Map extends React.Component {
           }
         });
       });
-    
-  
+
+    // add markers/nodes
+    new mapboxgl.Marker()
+      .setLngLat(startSegment)
+      .addTo(this.map);
+
+    new mapboxgl.Marker()
+      .setLngLat(endSegment)
+      .addTo(this.map);
+
+    this.map.on('click', (e)=>{
+      this.addMarker(e.lngLat)
+    });    
   }
+
+
+  addMarker(lngLat){
+    const {lng, lat} = lngLat
+    console.log("selected lng: ", lng)
+    console.log("selected lat: ", lat)
+    new mapboxgl.Marker()
+      .setLngLat([lng, lat])
+      .addTo(this.map);
+  }
+
   componentWillUnmount() {
     this.map.remove()
   }
