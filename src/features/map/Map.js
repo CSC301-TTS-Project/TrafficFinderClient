@@ -10,6 +10,7 @@ class Map extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      route_index: 0,
       lat: 43.65988,
       lng: -79.390342,
       zoom: 14,
@@ -51,7 +52,7 @@ class Map extends React.Component {
 
     this.map.on('click', (e) => {
       // this.addMarker(e.lngLat)
-      this.addToRoute(e.lngLat, 0, this.state.paths.length)
+      this.addToRoute(e.lngLat, this.state.route_index, this.state.paths.length)
     });
   }
 
@@ -96,15 +97,19 @@ class Map extends React.Component {
     // });
   };
 
-  addMarker(obj) {
+  addMarker(obj, index) {
     // const { lng, lat } = lngLat;
     const lng = obj["end_node"]["lng"];
     const lat = obj["end_node"]["lat"];
 
     if (!this.state.isBuildingPath) {
-      new mapboxgl.Marker()
-        .setLngLat([lng, lat])
-        .addTo(this.map);
+      new_node = new mapboxgl.Marker()
+        .setLngLat([lng, lat]);
+      new_node.addTo(this.map);
+      new_node.addEventListener("click", () => {
+        console.log("Want to delete Node: " + index)
+        deleteFromRoute(this.state.route_index, index)
+      })
       //First insert_node call has been made: start_node coords == end_node coords
       const newPaths = this.state.paths;
       newPaths.push(obj);
@@ -144,7 +149,7 @@ class Map extends React.Component {
       response.json().then((data) => {
         console.log("Retrieved insertNode data is:")
         console.log(data)
-        this.addMarker(data[index])
+        this.addMarker(data[index], index)
       })
     }).catch((error) => {
       console.log("Fetch error " + error)
@@ -152,11 +157,12 @@ class Map extends React.Component {
   }
 
   deleteFromRoute(route, index) {
+    const { lng, lat } = lngLat
     const body = {
       index,
       route
     }
-    fetch("http://127.0.0.1:8080/api/deleteNode", {
+    fetch("http://127.0.0.1:8080/api/insertNode", {
       method: "DELETE",
       body: JSON.stringify(body)
     }).then((response) => {
@@ -165,8 +171,9 @@ class Map extends React.Component {
         return
       }
       response.json().then((data) => {
-        console.log(JSON.parse(data))
-        // removeMarker()
+        console.log("Retrieved insertNode data is:")
+        console.log(data)
+        removeMarker(data)
       })
     }).catch((error) => {
       console.log("Fetch error " + error)
