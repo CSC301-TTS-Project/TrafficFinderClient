@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
@@ -40,16 +41,16 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
   },
   paper: {
-    backgroundColor: theme.palette.background.paper,
-    border: "2px solid #000",
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
+    backgroundColor: " #fafafa",
+    outline: "none",
+    borderRadius: "5px",
+    padding: theme.spacing(4, 8, 6),
   },
 }));
 
 export default function TransitionsModal() {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const [checkedItems, setCheckedItems] = React.useState({});
 
   const handleChange = (e) => {
@@ -98,33 +99,29 @@ export default function TransitionsModal() {
         }}
       >
         <Fade in={open}>
-          <div className={classes.paper} style={{ maxWidth: 500 }}>
-            <h3 style={{ textAlign: "center" }}>Return Values</h3>
-            {checkLists.map((item, index) => {
-              index = index + 1;
-              return (
-                <label
-                  htmlFor={`id_${index}`}
-                  key={`key_${index}`}
-                  style={{ padding: 10 }}
-                >
-                  <CheckBox
-                    id={`id_${index}`}
-                    value={item}
-                    onChange={handleChange}
-                    checked={checkedItems[item.id]}
-                    title={item}
-                  />
-                </label>
-              );
-            })}
+          <div className={classes.paper} style={{ width: 500 }}>
+            <h1 className={styles.modalTitle}>Return Values</h1>
+            <Grid container spacing={3}>
+              {checkLists.map((item, index) => {
+                index = index + 1;
+                return (
+                  <Grid item xs={6}>
+                    <label htmlFor={`id_${index}`} key={`key_${index}`}>
+                      <CheckBox
+                        id={`id_${index}`}
+                        value={item}
+                        onChange={handleChange}
+                        checked={checkedItems[item.id]}
+                        title={item}
+                      />
+                    </label>
+                  </Grid>
+                );
+              })}
+            </Grid>
             <div style={{ textAlign: "center", paddingTop: 10 }}>
-              <button
-                onClick={saveDataBtn}
-                style={{ background: "#9A21F9", color: "white", width: 150 }}
-              >
-                {" "}
-                send data{" "}
+              <button className={styles.primaryBtn} onClick={saveDataBtn}>
+                Save
               </button>
             </div>
           </div>
