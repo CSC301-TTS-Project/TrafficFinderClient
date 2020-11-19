@@ -56,8 +56,8 @@ class Map extends React.Component {
     });
   }
 
-  drawPath = () => {
-    const data = this.state.paths[this.state.paths.length - 1];
+  drawPath = (index) => {
+    const data = this.state.paths[index];
     const coords = data.coordinates;
     const newLine = {
       type: "Feature",
@@ -104,9 +104,10 @@ class Map extends React.Component {
 
     if (!this.state.isBuildingPath) {
       let new_node = new mapboxgl.Marker()
-        .setLngLat([lng, lat]);
-      new_node.addTo(this.map);
-      new_node.addEventListener("click", () => {
+        .setLngLat([lng, lat])
+        .addTo(this.map);
+      let html_element = new_node.getElement()
+      html_element.addEventListener("click", () => {
         console.log("Want to delete Node: " + index)
         this.deleteFromRoute(this.state.route_index, index)
       })
@@ -125,7 +126,7 @@ class Map extends React.Component {
       newPaths.push(obj);
       console.log("The New Paths is:");
       console.log(newPaths)
-      this.setState({ paths: newPaths }, this.drawPath);
+      this.setState({ paths: newPaths }, this.drawPath(this.state.paths.length - 1));
       console.log("Length of Paths Var is: " + this.state.paths.length)
     }
   }
