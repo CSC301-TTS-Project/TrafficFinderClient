@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
+import Checkbox from "@material-ui/core/Checkbox";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import styles from "./Menu.module.css";
@@ -21,14 +22,16 @@ const checkLists = [
 const CheckBox = ({ id, value, checked, onChange, title }) => {
   return (
     <div>
-      <input
+      <Checkbox checked={checked} color="default" />
+      {/* <input
+        className={}
         id={id}
         type="checkbox"
         name="inputNames"
         checked={checked}
         onChange={onChange}
         value={value}
-      />
+      /> */}
       {title}
     </div>
   );
@@ -44,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: " #fafafa",
     outline: "none",
     borderRadius: "5px",
-    padding: theme.spacing(4, 8, 6),
+    padding: theme.spacing(4, 17, 4),
   },
 }));
 
@@ -120,7 +123,11 @@ export default function TransitionsModal() {
               })}
             </Grid>
             <div style={{ textAlign: "center", paddingTop: 10 }}>
-              <button className={styles.primaryBtn} onClick={saveDataBtn}>
+              <button
+                className={styles.primaryBtn}
+                onClick={saveDataBtn}
+                onClick={handleClose}
+              >
                 Save
               </button>
             </div>
