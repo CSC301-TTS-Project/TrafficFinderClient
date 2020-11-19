@@ -50,13 +50,15 @@ class Map extends React.Component {
       });
     });
 
-    this.map.on('click', (e) => {
+    this.map.on('mousedown', (e) => {
       // this.addMarker(e.lngLat)
-      this.addToRoute(e.lngLat, this.state.route_index, this.state.paths.length)
+      if (e.originalEvent.button == 0) {
+        this.addToRoute(e.lngLat, this.state.route_index, this.state.paths.length)
+      } else {
+        this.deleteFromRoute(this.state.route_index, 1)
+      }
+
     });
-    this.map.on("dblclick", (e) => {
-      this.deleteFromRoute(this.state.route_index, 1)
-    })
   }
 
   drawPath = (index) => {
@@ -174,7 +176,7 @@ class Map extends React.Component {
         return
       }
       response.json().then((data) => {
-        console.log("Retrieved insertNode data is:")
+        console.log("Retrieved Delete Node data is:")
         console.log(data)
         this.removeMarker(data)
       })
@@ -183,13 +185,13 @@ class Map extends React.Component {
     })
   }
 
-  removeMarker(data){
+  removeMarker(data) {
     let keys = []
-    for(let k in data) keys.push(k);
-    for(let i = 0; i<keys.length;i++){
+    for (let k in data) keys.push(k);
+    for (let i = 0; i < keys.length; i++) {
       let index = parseInt(keys[i])
       this.state.paths[index] = data[index]
-      drawPath(index)
+      this.drawPath(index)
     }
   }
 
