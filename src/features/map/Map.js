@@ -61,7 +61,7 @@ class Map extends React.Component {
     });
   }
 
-  removePath(index){
+  removePath(index) {
     const data = this.state.paths[index];
     const coords = data.coordinates;
     const newLine = {
@@ -73,7 +73,8 @@ class Map extends React.Component {
       geometry: {
         type: "LineString",
         coordinates: coords,
-      },    
+      },
+    }
   }
 
   drawPath = (index) => {
@@ -201,17 +202,24 @@ class Map extends React.Component {
   }
 
   removeMarker(data, index) {
-    let keys = []
-    this.removePath(index)
-    this.state.paths.splice(index, 1)
-    for (let k in data) keys.push(k);
-    to_change = keys[0]
-    for (let i = 0; i < self.paths.length; i++) {
-      if (self.paths[i].index === parseInt(to_change)){
-        self.paths[i] = data[to_change]
-        this.drawPath(i)
-      } 
+    this.removePath(index);
+    let new_paths = this.state.paths;
+    new_paths.splice(index, 1);
+    let to_change = index;
+    let j = 0;
+    for (let i = 0; i < this.state.paths.length; i++) {
+      if (new_paths[i].index === to_change - 1) {
+        new_paths[i].end_node = data[to_change].end_node;
+      }
+      if (new_paths[i].index === to_change) {
+        new_paths[i].start_node = data[to_change].start_node;
+        new_paths[i].coordinates = data[to_change].coordinates;
+        j = i;
+        break;
+      }
     }
+    this.setState({ paths: new_paths })
+    this.drawPath(j);
   }
 
   modifyRoute(lngLat, route, index) {
