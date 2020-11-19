@@ -91,25 +91,26 @@ class Map extends React.Component {
       ...this.map.getSource("lines")["_data"],
       newFeatures,
     });
-    this.setState({
-      isBuildingPath: false,
-    });
+    // this.setState({
+    //   isBuildingPath: false,
+    // });
   };
 
   addMarker(obj) {
     // const { lng, lat } = lngLat;
-    console.log(obj)
     const lng = obj["end_node"]["lng"];
     const lat = obj["end_node"]["lat"];
-    console.log("selected lng: ", lat);
-    console.log("selected lat: ", lng);
 
     if (!this.state.isBuildingPath) {
       new mapboxgl.Marker()
         .setLngLat([lng, lat])
         .addTo(this.map);
       //First insert_node call has been made: start_node coords == end_node coords
+      const newPaths = this.state.paths;
+      newPaths.push(obj);
+      this.setState({ paths: newPaths });
       this.setState({ isBuildingPath: true });
+      console.log("Ran as first node")
     } else if (this.state.isBuildingPath) {
       new mapboxgl.Marker()
         .setLngLat([lng, lat])
@@ -117,9 +118,10 @@ class Map extends React.Component {
       //Second insert call has been made and start_node coords !== end_node coords
       const newPaths = this.state.paths;
       newPaths.push(obj);
+      console.log("The New Paths is:");
       console.log(newPaths)
       this.setState({ paths: newPaths }, this.drawPath);
-      console.log(this.state.paths)
+      console.log("Length of Paths Var is: " + this.state.paths.length)
     }
   }
 
@@ -140,6 +142,7 @@ class Map extends React.Component {
         return
       }
       response.json().then((data) => {
+        console.log("Retrieved insertNode data is:")
         console.log(data)
         this.addMarker(data[index])
       })
