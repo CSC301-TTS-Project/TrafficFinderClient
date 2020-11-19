@@ -10,6 +10,7 @@ class Map extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      route_index: 0,
       lat: 43.65988,
       lng: -79.390342,
       zoom: 14,
@@ -49,14 +50,42 @@ class Map extends React.Component {
       });
     });
 
-    this.map.on('click', (e) => {
+    this.map.on('mousedown', (e) => {
       // this.addMarker(e.lngLat)
-      this.addToRoute(e.lngLat, 0, this.state.paths.length)
+      if (e.originalEvent.button === 0) {
+        this.addToRoute(e.lngLat, this.state.route_index, this.state.paths.length)
+      } else {
+        this.deleteFromRoute(this.state.route_index, 0)
+      }
+
     });
   }
 
-  drawPath = () => {
-    const data = this.state.paths[this.state.paths.length - 1];
+  removePath = (index) => {
+    const data = this.state.paths[index];
+    const coords = data.coordinates;
+    const newLine = {
+      type: "Feature",
+      properties: {
+        // color: "#B5B5FE" // soft purple
+        color: "#000000", // stronger purple
+      },
+      geometry: {
+        type: "LineString",
+        coordinates: coords,
+      },
+    }
+    const newFeatures = this.map.getSource("lines")["_data"].features;
+    newFeatures.push(newLine);
+
+    this.map.getSource("lines").setData({
+      ...this.map.getSource("lines")["_data"],
+      newFeatures,
+    });
+  }
+
+  drawPath = (index) => {
+    const data = this.state.paths[index];
     const coords = data.coordinates;
     const newLine = {
       type: "Feature",
@@ -96,15 +125,20 @@ class Map extends React.Component {
     // });
   };
 
-  addMarker(obj) {
+  addMarker(obj, index) {
     // const { lng, lat } = lngLat;
     const lng = obj["end_node"]["lng"];
     const lat = obj["end_node"]["lat"];
 
     if (!this.state.isBuildingPath) {
-      new mapboxgl.Marker()
+      let new_node = new mapboxgl.Marker()
         .setLngLat([lng, lat])
         .addTo(this.map);
+      let html_element = new_node.getElement()
+      html_element.addEventListener("click", () => {
+        console.log("Want to delete Node: " + index)
+        this.deleteFromRoute(this.state.route_index, index)
+      })
       //First insert_node call has been made: start_node coords == end_node coords
       const newPaths = this.state.paths;
       newPaths.push(obj);
@@ -120,7 +154,7 @@ class Map extends React.Component {
       newPaths.push(obj);
       console.log("The New Paths is:");
       console.log(newPaths)
-      this.setState({ paths: newPaths }, this.drawPath);
+      this.setState({ paths: newPaths }, this.drawPath(this.state.paths.length - 1));
       console.log("Length of Paths Var is: " + this.state.paths.length)
     }
   }
@@ -144,7 +178,7 @@ class Map extends React.Component {
       response.json().then((data) => {
         console.log("Retrieved insertNode data is:")
         console.log(data)
-        this.addMarker(data[index])
+        this.addMarker(data[index], index)
       })
     }).catch((error) => {
       console.log("Fetch error " + error)
@@ -165,14 +199,38 @@ class Map extends React.Component {
         return
       }
       response.json().then((data) => {
-        console.log(JSON.parse(data))
-        // removeMarker()
+        console.log("Retrieved Delete Node data is:")
+        console.log(data)
+        this.removeMarker(data, index)
       })
     }).catch((error) => {
       console.log("Fetch error " + error)
     })
   }
 
+  removeMarker(data, index) {
+    this.removePath(index);
+    let new_paths = this.state.paths;
+    new_paths.splice(index, 1);
+    let to_change = index;
+    let j = 0;
+    for (let i = 0; i < this.state.paths.length; i++) {
+      console.log(new_paths[i])
+      if (i === to_change - 1) {
+        console.log(data[to_change])
+        new_paths[i].end_node = data[to_change].end_node;
+      }
+      if (i === to_change) {
+        this.removePath(i);
+        new_paths[i].start_node = data[to_change].start_node;
+        new_paths[i].coordinates = data[to_change].coordinates;
+        j = i;
+        break;
+      }
+    }
+    this.setState({ paths: new_paths })
+    this.drawPath(j);
+  }
 
   modifyRoute(lngLat, route, index) {
     const { lng, lat } = lngLat
