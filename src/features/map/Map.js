@@ -209,8 +209,11 @@ class Map extends React.Component {
   }
 
   removeMarker(data, index) {
+   let new_paths = this.state.paths;
+    if (new_paths.length == 0){
+    	return 
+    }
     this.removePath(index);
-    let new_paths = this.state.paths;
     new_paths.splice(index, 1);
     let to_change = index;
     let j = 0;
@@ -229,6 +232,9 @@ class Map extends React.Component {
       }
     }
     this.setState({ paths: new_paths })
+    if (new_paths.length == 0){
+    	return 
+    }
     this.drawPath(j);
   }
 
