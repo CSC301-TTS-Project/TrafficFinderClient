@@ -117,7 +117,9 @@ class Map extends React.Component {
       //Second insert call has been made and start_node coords !== end_node coords
       const newPaths = this.state.paths;
       newPaths.push(obj);
+      console.log(newPaths)
       this.setState({ paths: newPaths }, this.drawPath);
+      console.log(this.state.paths)
     }
   }
 
@@ -139,7 +141,7 @@ class Map extends React.Component {
       }
       response.json().then((data) => {
         console.log(data)
-        this.addMarker(data[0])
+        this.addMarker(data[index])
       })
     }).catch((error) => {
       console.log("Fetch error " + error)
