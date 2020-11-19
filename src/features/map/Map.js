@@ -108,7 +108,7 @@ class Map extends React.Component {
       new_node.addTo(this.map);
       new_node.addEventListener("click", () => {
         console.log("Want to delete Node: " + index)
-        deleteFromRoute(this.state.route_index, index)
+        this.deleteFromRoute(this.state.route_index, index)
       })
       //First insert_node call has been made: start_node coords == end_node coords
       const newPaths = this.state.paths;
@@ -157,7 +157,6 @@ class Map extends React.Component {
   }
 
   deleteFromRoute(route, index) {
-    const { lng, lat } = lngLat
     const body = {
       index,
       route
@@ -173,13 +172,16 @@ class Map extends React.Component {
       response.json().then((data) => {
         console.log("Retrieved insertNode data is:")
         console.log(data)
-        removeMarker(data)
+        this.removeMarker(data)
       })
     }).catch((error) => {
       console.log("Fetch error " + error)
     })
   }
 
+  removeMarker(data){
+    console.log(data)
+  }
 
   modifyRoute(lngLat, route, index) {
     const { lng, lat } = lngLat
