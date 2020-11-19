@@ -103,7 +103,7 @@ class Map extends React.Component {
     const lat = obj["end_node"]["lat"];
 
     if (!this.state.isBuildingPath) {
-      new_node = new mapboxgl.Marker()
+      let new_node = new mapboxgl.Marker()
         .setLngLat([lng, lat]);
       new_node.addTo(this.map);
       new_node.addEventListener("click", () => {
