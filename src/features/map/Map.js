@@ -162,7 +162,7 @@ class Map extends React.Component {
       index,
       route
     }
-    fetch("http://127.0.0.1:8080/api/insertNode", {
+    fetch("http://127.0.0.1:8080/api/deleteNode", {
       method: "DELETE",
       body: JSON.stringify(body)
     }).then((response) => {
@@ -181,7 +181,13 @@ class Map extends React.Component {
   }
 
   removeMarker(data){
-    console.log(data)
+    let keys = []
+    for(let k in data) keys.push(k);
+    for(let i = 0; i<keys.length;i++){
+      let index = parseInt(keys[i])
+      this.state.paths[index] = data[index]
+      drawPath(index)
+    }
   }
 
   modifyRoute(lngLat, route, index) {
