@@ -26,10 +26,6 @@ class Map extends React.Component {
       zoom: this.state.zoom,
     });
 
-    // Example of segment connecting nodes (markers)
-    const startSegment = [-79.396, 43.658716];
-    const endSegment = [-79.399877, 43.667489];
-
     // add line/segment
     this.map.on("load", () => {
       this.map.addSource("lines", {
@@ -37,23 +33,7 @@ class Map extends React.Component {
         data: {
           type: "FeatureCollection",
           // can draw multiple lines by including multiple objects inside features list
-          features: [
-            {
-              type: "Feature",
-              properties: {
-                // color: "#B5B5FE" // soft purple
-                color: "#9A21F9", // stronger purple
-              },
-              geometry: {
-                type: "LineString",
-                coordinates: [
-                  // [long, lat]
-                  startSegment,
-                  endSegment,
-                ],
-              },
-            },
-          ],
+          features: [],
         },
       });
       this.map.addLayer({
@@ -90,7 +70,8 @@ class Map extends React.Component {
       },
     };
 
-    //Example new line uncomment when needed
+    //Add Feature object to features array to add points
+    // Example new line uncomment when needed
     // const newLine = {
     //   type: "Feature",
     //   properties: {
