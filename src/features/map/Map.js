@@ -49,21 +49,12 @@ class Map extends React.Component {
       });
     });
 
-    // add markers/nodes
-
-
-    new mapboxgl.Marker()
-      .setLngLat(endSegment)
-      .addTo(this.map);
-
     this.map.on('click', (e)=>{
       // this.addMarker(e.lngLat)
       this.addToRoute(e.lngLat, 0, 0)
     });    
-    this.map.on("click", (e) => {
-      this.addMarker(e.lngLat);
-    });
   }
+
   drawPath = () => {
     const data = this.state.paths[this.state.paths.length - 1];
     const coords = data.coordinates;
@@ -79,30 +70,6 @@ class Map extends React.Component {
       },
     };
 
-  addToRoute(lngLat, route, index){
-  	const {lng, lat} = lngLat
-  	const body = {
-    		index,
-    		route,
-    		lat,
-    		lng
-    	}
-    fetch("http://127.0.0.1:8080/api/insertNode", {
-    	method:"POST",
-    	body: JSON.stringify(body)
-    }).then((response) => {
-    	if(response.status != 200){
-    		console.log("There was a problem, Status code: " + response.status)
-    		return
-    	}
-    	response.json().then((data) => {
-    		console.log(JSON.parse(data))
-    		// addMarker()
-    	})
-    }).catch((error) => {
-    	console.log("Fetch error " + error)
-    })
-  }
     //Add Feature object to features array to add points
     // Example new line uncomment when needed
     // const newLine = {
@@ -131,6 +98,7 @@ class Map extends React.Component {
       isBuildingPath: false,
     });
   };
+
   addMarker(lngLat) {
     const { lng, lat } = lngLat;
     console.log("selected lng: ", lng);
@@ -231,6 +199,31 @@ class Map extends React.Component {
       });
       this.setState({ paths: newPaths }, this.drawPath);
     }
+  }
+
+    addToRoute(lngLat, route, index){
+  	const {lng, lat} = lngLat
+  	const body = {
+    		index,
+    		route,
+    		lat,
+    		lng
+    	}
+    fetch("http://127.0.0.1:8080/api/insertNode", {
+    	method:"POST",
+    	body: JSON.stringify(body)
+    }).then((response) => {
+    	if(response.status != 200){
+    		console.log("There was a problem, Status code: " + response.status)
+    		return
+    	}
+    	response.json().then((data) => {
+    		console.log(JSON.parse(data))
+    		// addMarker()
+    	})
+    }).catch((error) => {
+    	console.log("Fetch error " + error)
+    })
   }
 
   deleteFromRoute(route, index){
