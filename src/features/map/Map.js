@@ -61,6 +61,21 @@ class Map extends React.Component {
     });
   }
 
+  removePath(index){
+    const data = this.state.paths[index];
+    const coords = data.coordinates;
+    const newLine = {
+      type: "Feature",
+      properties: {
+        // color: "#B5B5FE" // soft purple
+        color: "#000000", // stronger purple
+      },
+      geometry: {
+        type: "LineString",
+        coordinates: coords,
+      },    
+  }
+
   drawPath = (index) => {
     const data = this.state.paths[index];
     const coords = data.coordinates;
@@ -178,20 +193,24 @@ class Map extends React.Component {
       response.json().then((data) => {
         console.log("Retrieved Delete Node data is:")
         console.log(data)
-        this.removeMarker(data)
+        this.removeMarker(data, index)
       })
     }).catch((error) => {
       console.log("Fetch error " + error)
     })
   }
 
-  removeMarker(data) {
+  removeMarker(data, index) {
     let keys = []
+    this.removePath(index)
+    this.state.paths.splice(index, 1)
     for (let k in data) keys.push(k);
-    for (let i = 0; i < keys.length; i++) {
-      let index = parseInt(keys[i])
-      this.state.paths[index] = data[index]
-      this.drawPath(index)
+    to_change = keys[0]
+    for (let i = 0; i < self.paths.length; i++) {
+      if (self.paths[i].index === parseInt(to_change)){
+        self.paths[i] = data[to_change]
+        this.drawPath(i)
+      } 
     }
   }
 
