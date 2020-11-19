@@ -137,7 +137,7 @@ class Map extends React.Component {
       method: "POST",
       body: JSON.stringify(body)
     }).then((response) => {
-      if (response.status != 200) {
+      if (response.status !== 200) {
         console.log("There was a problem, Status code: " + response.status)
         return
       }
@@ -160,7 +160,7 @@ class Map extends React.Component {
       method: "DELETE",
       body: JSON.stringify(body)
     }).then((response) => {
-      if (response.status != 200) {
+      if (response.status !== 200) {
         console.log("There was a problem, Status code: " + response.status)
         return
       }
@@ -186,7 +186,7 @@ class Map extends React.Component {
       method: "PATCH",
       body: JSON.stringify(body)
     }).then((response) => {
-      if (response.status != 200) {
+      if (response.status !== 200) {
         console.log("There was a problem, Status code: " + response.status)
         return
       }
