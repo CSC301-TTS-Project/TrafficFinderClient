@@ -6,10 +6,10 @@ export default class MenuButton extends Component {
   }
 
   render() {
-    const { name } = this.props;
+    const { name, onClick } = this.props;
     return (
       <div className={styles.menuBtnContainer}>
-        <button className={styles.menuBtn}>{name}</button>
+        <button className={styles.menuBtn} onClick={() => onClick()}>{name}</button>
       </div>
     );
   }

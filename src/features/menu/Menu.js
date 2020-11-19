@@ -48,18 +48,46 @@ export default class Menu extends Component {
               <div>
                 <RangeSelect
                   title="Hour Range"
-                  startVal="0:700"
-                  endVal="10:00"
+                  startVal="07:00"
+                  endVal="13:00"
                 />
                 <RangeSelect
                   title="Date Range"
-                  startVal="2020/09/01/"
-                  endVal="2020/09/17"
+                  startVal="2018-09-01"
+                  endVal="2018-09-07"
                 />
               </div>
               <div>
                 <SelectReturnValues />
-                <MenuButton name="Download as CSV" />
+                <MenuButton name="Download as CSV" onClick={() => {
+                  fetch("http://127.0.0.1:8080/api/getTrafficData", {
+                    method: "POST",
+                    body: JSON.stringify({
+                      "route": 0,
+                      "date_range": ["2018-09-01", "2018-09-07"],
+                      "days_of_week": [0, 3, 5],
+                      "hour_range": [7, 13]
+                    })
+                  }).then((response) => {
+                    if (response.status !== 200) {
+                      console.log("There was a problem, Status code: " + response.status)
+                      return
+                    } else {
+                      return response.blob()
+                    }
+                  }).then((blob) => {
+                    const url = window.URL.createObjectURL(new Blob([blob]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', 'data.csv');
+                    document.body.appendChild(link);
+                    link.click();
+                    link.parentNode.removeChild(link);
+                  }).catch((error) => {
+                    console.log("Fetch error " + error)
+                  })
+                }
+                }/>
               </div>
             </div>
           </div>
