@@ -54,6 +54,9 @@ class Map extends React.Component {
       // this.addMarker(e.lngLat)
       this.addToRoute(e.lngLat, this.state.route_index, this.state.paths.length)
     });
+    this.map.on("dblclick", (e) => {
+      this.deleteFromRoute(this.state.route_index, 1)
+    })
   }
 
   drawPath = (index) => {
