@@ -52,10 +52,10 @@ class Map extends React.Component {
 
     this.map.on('mousedown', (e) => {
       // this.addMarker(e.lngLat)
-      if (e.originalEvent.button == 0) {
+      if (e.originalEvent.button === 0) {
         this.addToRoute(e.lngLat, this.state.route_index, this.state.paths.length)
       } else {
-        this.deleteFromRoute(this.state.route_index, 4)
+        this.deleteFromRoute(this.state.route_index, 0)
       }
 
     });
@@ -68,7 +68,7 @@ class Map extends React.Component {
       type: "Feature",
       properties: {
         // color: "#B5B5FE" // soft purple
-        color: "#00000", // stronger purple
+        color: "#000000", // stronger purple
       },
       geometry: {
         type: "LineString",
