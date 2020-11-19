@@ -55,26 +55,33 @@ class Map extends React.Component {
       if (e.originalEvent.button == 0) {
         this.addToRoute(e.lngLat, this.state.route_index, this.state.paths.length)
       } else {
-        this.deleteFromRoute(this.state.route_index, 1)
+        this.deleteFromRoute(this.state.route_index, 4)
       }
 
     });
   }
 
-  removePath(index) {
+  removePath = (index) => {
     const data = this.state.paths[index];
     const coords = data.coordinates;
     const newLine = {
       type: "Feature",
       properties: {
         // color: "#B5B5FE" // soft purple
-        color: "#000000", // stronger purple
+        color: "#00000", // stronger purple
       },
       geometry: {
         type: "LineString",
         coordinates: coords,
       },
     }
+    const newFeatures = this.map.getSource("lines")["_data"].features;
+    newFeatures.push(newLine);
+
+    this.map.getSource("lines").setData({
+      ...this.map.getSource("lines")["_data"],
+      newFeatures,
+    });
   }
 
   drawPath = (index) => {
@@ -208,10 +215,13 @@ class Map extends React.Component {
     let to_change = index;
     let j = 0;
     for (let i = 0; i < this.state.paths.length; i++) {
-      if (new_paths[i].index === to_change - 1) {
+      console.log(new_paths[i])
+      if (i === to_change - 1) {
+        console.log(data[to_change])
         new_paths[i].end_node = data[to_change].end_node;
       }
-      if (new_paths[i].index === to_change) {
+      if (i === to_change) {
+        this.removePath(i);
         new_paths[i].start_node = data[to_change].start_node;
         new_paths[i].coordinates = data[to_change].coordinates;
         j = i;
