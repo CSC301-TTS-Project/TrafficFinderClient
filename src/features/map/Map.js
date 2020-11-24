@@ -167,7 +167,7 @@ class Map extends React.Component {
       lat,
       lng
     }
-    fetch("http://127.0.0.1:8080/api/insertNode", {
+    fetch("http://Tfsd2-env.eba-2rmc52x2.us-east-2.elasticbeanstalk.com/api/insertNode", {
       method: "POST",
       body: JSON.stringify(body)
     }).then((response) => {
@@ -190,7 +190,7 @@ class Map extends React.Component {
       index,
       route
     }
-    fetch("http://127.0.0.1:8080/api/deleteNode", {
+    fetch("http://Tfsd2-env.eba-2rmc52x2.us-east-2.elasticbeanstalk.com/api/deleteNode", {
       method: "DELETE",
       body: JSON.stringify(body)
     }).then((response) => {
@@ -246,7 +246,7 @@ class Map extends React.Component {
       lat,
       lng
     }
-    fetch("http://127.0.0.1:8080/api/modifyNode", {
+    fetch("http://Tfsd2-env.eba-2rmc52x2.us-east-2.elasticbeanstalk.com/api/modifyNode", {
       method: "PATCH",
       body: JSON.stringify(body)
     }).then((response) => {
