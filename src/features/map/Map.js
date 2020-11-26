@@ -50,14 +50,14 @@ class Map extends React.Component {
       });
     });
 
-    this.map.on('mousedown', (e) => {
+    this.map.on('click', (e) => {
       // this.addMarker(e.lngLat)
-      if (e.originalEvent.button === 0) {
-        this.addToRoute(e.lngLat, this.state.route_index, this.state.paths.length)
-      } else {
-        this.deleteFromRoute(this.state.route_index, 0)
-      }
-
+      // if (e.originalEvent.button === 0) {
+      //   this.addToRoute(e.lngLat, this.state.route_index, this.state.paths.length)
+      // } else {
+      //   this.deleteFromRoute(this.state.route_index, 0)
+      // }
+      this.addToRoute(e.lngLat, this.state.route_index, this.state.paths.length)
     });
   }
 
@@ -130,33 +130,38 @@ class Map extends React.Component {
     const lng = obj["end_node"]["lng"];
     const lat = obj["end_node"]["lat"];
 
+    let new_node = null;
+    let newPaths = null;
+
     if (!this.state.isBuildingPath) {
-      let new_node = new mapboxgl.Marker()
-        .setLngLat([lng, lat])
-        .addTo(this.map);
-      let html_element = new_node.getElement()
-      html_element.addEventListener("click", () => {
-        console.log("Want to delete Node: " + index)
-        this.deleteFromRoute(this.state.route_index, index)
-      })
+      new_node = new mapboxgl.Marker({ draggable: true })
+        .setLngLat([lng, lat]).addTo(this.map)
+
       //First insert_node call has been made: start_node coords == end_node coords
-      const newPaths = this.state.paths;
+      newPaths = this.state.paths;
       newPaths.push(obj);
       this.setState({ paths: newPaths });
       this.setState({ isBuildingPath: true });
-      console.log("Ran as first node")
+
     } else if (this.state.isBuildingPath) {
-      new mapboxgl.Marker()
-        .setLngLat([lng, lat])
-        .addTo(this.map);
+      new_node = new mapboxgl.Marker({ draggable: true })
+        .setLngLat([lng, lat]).addTo(this.map);
       //Second insert call has been made and start_node coords !== end_node coords
-      const newPaths = this.state.paths;
+      newPaths = this.state.paths;
       newPaths.push(obj);
-      console.log("The New Paths is:");
-      console.log(newPaths)
       this.setState({ paths: newPaths }, this.drawPath(this.state.paths.length - 1));
-      console.log("Length of Paths Var is: " + this.state.paths.length)
     }
+    function onClickDelete() {
+      console.log("WANNA DELETE BRO??")
+    }
+    function onDragEnd() {
+      var lngLat = new_node.getLngLat();
+    }
+    new_node.on('click', onClickDelete);
+    new_node.on('dragend', () => {
+      new_node.remove();
+      this.deleteFromRoute(0, index)
+    });
   }
 
   addToRoute(lngLat, route, index) {
@@ -209,9 +214,9 @@ class Map extends React.Component {
   }
 
   removeMarker(data, index) {
-   let new_paths = this.state.paths;
-    if (new_paths.length == 0){
-    	return 
+    let new_paths = this.state.paths;
+    if (new_paths.length == 0) {
+      return
     }
     this.removePath(index);
     new_paths.splice(index, 1);
@@ -232,8 +237,8 @@ class Map extends React.Component {
       }
     }
     this.setState({ paths: new_paths })
-    if (new_paths.length == 0){
-    	return 
+    if (new_paths.length == 0) {
+      return
     }
     this.drawPath(j);
   }
