@@ -60,7 +60,7 @@ export default class Menu extends Component {
               <div>
                 <SelectReturnValues />
                 <MenuButton name="Download as CSV" onClick={() => {
-                  fetch("http://127.0.0.1:8080/api/getTrafficData", {
+                  fetch("http://Tfsd2-env.eba-2rmc52x2.us-east-2.elasticbeanstalk.com/api/getTrafficData", {
                     method: "POST",
                     body: JSON.stringify({
                       "route": 0,
