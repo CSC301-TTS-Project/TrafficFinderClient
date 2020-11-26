@@ -23,8 +23,8 @@
 .sideBar {
   display: inline-block;
   background-color: #eaeaf2;
-  width: 110px;
   height: 100vh;
+  z-index: -1;
 }
 
 .menu {
