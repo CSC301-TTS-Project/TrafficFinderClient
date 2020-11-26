@@ -62,6 +62,9 @@ class Map extends React.Component {
   }
 
   removePath = (index) => {
+    // if (index >= this.state.paths.length){
+    //   index = this.state.paths.length-1
+    // }
     const data = this.state.paths[index];
     const coords = data.coordinates;
     const newLine = {
@@ -139,6 +142,7 @@ class Map extends React.Component {
 
       //First insert_node call has been made: start_node coords == end_node coords
       newPaths = this.state.paths;
+      obj.ind = index
       newPaths.push(obj);
       this.setState({ paths: newPaths });
       this.setState({ isBuildingPath: true });
@@ -157,7 +161,9 @@ class Map extends React.Component {
     function onDragEnd() {
       var lngLat = new_node.getLngLat();
     }
-    new_node.on('click', onClickDelete);
+    new_node.on('click', () => {
+      onClickDelete()
+    });
     new_node.on('dragend', () => {
       new_node.remove();
       this.deleteFromRoute(0, index)
@@ -206,6 +212,8 @@ class Map extends React.Component {
       response.json().then((data) => {
         console.log("Retrieved Delete Node data is:")
         console.log(data)
+        console.log(Object.keys(data)[0])
+        console.log(this.state.paths.length)
         this.removeMarker(data, index)
       })
     }).catch((error) => {
@@ -220,6 +228,9 @@ class Map extends React.Component {
     }
     this.removePath(index);
     new_paths.splice(index, 1);
+    for (let i = index; i < new_paths.length; i++){
+      new_paths[i].ind--
+    }
     let to_change = index;
     let j = 0;
     for (let i = 0; i < this.state.paths.length; i++) {
@@ -241,6 +252,7 @@ class Map extends React.Component {
       return
     }
     this.drawPath(j);
+    console.log(this.state.paths)
   }
 
   modifyRoute(lngLat, route, index) {
