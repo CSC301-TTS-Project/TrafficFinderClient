@@ -3,6 +3,7 @@ import mapboxgl from "mapbox-gl";
 import { getHereToken, getMapboxToken } from "./mapActions";
 import "./Map.module.css";
 import Menu from "../menu/Menu";
+import { ENDPOINT } from "./../requests";
 
 mapboxgl.accessToken = getMapboxToken();
 
@@ -167,7 +168,7 @@ class Map extends React.Component {
       lat,
       lng
     }
-    fetch("http://Tfsd2-env.eba-2rmc52x2.us-east-2.elasticbeanstalk.com/api/insertNode", {
+    fetch(`${ENDPOINT}/api/insertNode`, {
       method: "POST",
       body: JSON.stringify(body)
     }).then((response) => {
@@ -190,7 +191,7 @@ class Map extends React.Component {
       index,
       route
     }
-    fetch("http://Tfsd2-env.eba-2rmc52x2.us-east-2.elasticbeanstalk.com/api/deleteNode", {
+    fetch(`${ENDPOINT}/api/deleteNode`, {
       method: "DELETE",
       body: JSON.stringify(body)
     }).then((response) => {
@@ -246,7 +247,7 @@ class Map extends React.Component {
       lat,
       lng
     }
-    fetch("http://Tfsd2-env.eba-2rmc52x2.us-east-2.elasticbeanstalk.com/api/modifyNode", {
+    fetch(`${ENDPOINT}/api/modifyNode`, {
       method: "PATCH",
       body: JSON.stringify(body)
     }).then((response) => {
