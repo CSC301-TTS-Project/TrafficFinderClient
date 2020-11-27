@@ -8,6 +8,7 @@ import ChevronRightOutlinedIcon from "@material-ui/icons/ChevronRightOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 
 import "./Menu.module.css";
+import { ENDPOINT } from "../requests";
 
 export default class Menu extends Component {
   constructor() {
@@ -60,7 +61,7 @@ export default class Menu extends Component {
               <div>
                 <SelectReturnValues />
                 <MenuButton name="Download as CSV" onClick={() => {
-                  fetch("http://Tfsd2-env.eba-2rmc52x2.us-east-2.elasticbeanstalk.com/api/getTrafficData", {
+                  fetch(`${ENDPOINT}/api/getTrafficData`, {
                     method: "POST",
                     body: JSON.stringify({
                       "route": 0,
