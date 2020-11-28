@@ -16,8 +16,8 @@ export default class Menu extends Component {
     this.state = {
       menuOpen: false,
       selectedDaysofWeek:[],
-      // selectedStartHour: undefined
-      selectedStartHour: "07:00"
+      selectedStartHour: undefined
+      // selectedStartHour: "07:00"
 
     };
   }
@@ -47,6 +47,10 @@ export default class Menu extends Component {
     });
   }
 
+  updateSelectedStartHour = (newStartHour)=>{
+    this.setState({selectedStartHour:newStartHour})
+  }
+
   render() {
     return (
       <>
@@ -74,7 +78,7 @@ export default class Menu extends Component {
                   title="Hour Range"
                   startVal={this.state.selectedStartHour}
                   endVal="13:00"
-                  onStartTimeChange={(newStartTime)=>this.setState({selectedStartHour:newStartTime})}
+                  onStartTimeChange={this.updateSelectedStartHour}
                 />
                 <RangeSelect
                   title="Date Range"
