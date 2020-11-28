@@ -3,26 +3,15 @@ import styles from "./Menu.module.css";
 export default class RangeSelect extends Component {
   constructor(props) {
     super(props);
-    // this.state = {
-    //   newStartVal: undefined
-    // };
   }
 
   handleInputChange = (e) => {
-    console.log("input change")
-
     const {onStartValChange} = this.props
     onStartValChange(e.target.value)
-     
-    // this.setState({
-    //   newStartVal: e.target.value
-    // });f
 }
 
   render() {
     const { title, startVal, endVal } = this.props;
-
-    
 
     return (
       <div>

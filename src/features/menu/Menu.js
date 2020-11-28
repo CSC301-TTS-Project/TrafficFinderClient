@@ -17,8 +17,6 @@ export default class Menu extends Component {
       menuOpen: false,
       selectedDaysofWeek:[],
       selectedStartHour: undefined // format rn: '7' not '07:00'
-      // selectedStartHour: "07:00"
-
     };
   }
 
