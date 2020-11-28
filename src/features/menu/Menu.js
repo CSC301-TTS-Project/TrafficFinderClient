@@ -25,20 +25,26 @@ export default class Menu extends Component {
     });
   };
 
-  updateSelectedDays = (day) => {
-    console.log("will update selected days of week", day )
+  updateSelectedDays = (dayToChange) => {
+    console.log("will update selected days of week", dayToChange )
     const {selectedDaysofWeek}  = this.state
-    
+    let newSelectedDays
 
-    // if day in selected days: remove
-
-    // else: append
-    selectedDaysofWeek.push(day)
-    console.log("new selected days Menu comp", selectedDaysofWeek)
-
-    this.setState({
-      selectedDaysofWeek: selectedDaysofWeek,
-    });
+    if(selectedDaysofWeek.includes(dayToChange)){
+      newSelectedDays = selectedDaysofWeek.filter(function(day) {
+        return day !== dayToChange
+      })
+      this.setState({
+        selectedDaysofWeek:newSelectedDays
+      })
+    }
+    else{
+      selectedDaysofWeek.push(dayToChange)
+      console.log("new selected days Menu comp", selectedDaysofWeek)
+      this.setState({
+        selectedDaysofWeek: selectedDaysofWeek,
+      });
+    }
   }
 
   render() {
