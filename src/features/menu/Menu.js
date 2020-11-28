@@ -15,7 +15,10 @@ export default class Menu extends Component {
     super();
     this.state = {
       menuOpen: false,
-      selectedDaysofWeek:[] 
+      selectedDaysofWeek:[],
+      // selectedStartHour: undefined
+      selectedStartHour: "07:00"
+
     };
   }
 
@@ -69,7 +72,7 @@ export default class Menu extends Component {
               <div>
                 <RangeSelect
                   title="Hour Range"
-                  startVal="07:00"
+                  startVal={this.state.selectedStartHour}
                   endVal="13:00"
                 />
                 <RangeSelect

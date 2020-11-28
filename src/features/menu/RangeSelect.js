@@ -3,15 +3,19 @@ import styles from "./Menu.module.css";
 export default class RangeSelect extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      newStartVal: undefined
-    };
+    // this.state = {
+    //   newStartVal: undefined
+    // };
   }
 
   handleInputChange = (e) => {
-    this.setState({
-      newStartVal: e.target.value
-    });
+    console.log("input change")
+
+    // const {onStartTimeChange}
+    
+    // this.setState({
+    //   newStartVal: e.target.value
+    // });
 }
 
   render() {
@@ -22,7 +26,7 @@ export default class RangeSelect extends Component {
     return (
       <div>
         <h4 className={styles.menuTitle}>{title}</h4>
-        <input type="text" value={this.state.newStartVal} 
+        <input type="text" value={startVal} 
         className={styles.rangeInput}  
         onChange={this.handleInputChange}/>
         <span className={styles.textRange}>to</span>
