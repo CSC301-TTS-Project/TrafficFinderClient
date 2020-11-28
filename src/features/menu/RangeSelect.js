@@ -22,7 +22,7 @@ export default class RangeSelect extends Component {
     return (
       <div>
         <h4 className={styles.menuTitle}>{title}</h4>
-        <input type="text" value={this.state.startVal} className={styles.rangeInput}  onChange={this.handleInputChange}/>
+        <input type="text" value={this.state.newStartVal} className={styles.rangeInput}  onChange={this.handleInputChange}/>
         <span className={styles.textRange}>to</span>
         <input type="text" value={endVal} className={styles.rangeInput} />
       </div>
