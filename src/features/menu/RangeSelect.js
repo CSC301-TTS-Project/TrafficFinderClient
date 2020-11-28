@@ -5,10 +5,18 @@ export default class RangeSelect extends Component {
     super(props);
   }
 
-  handleInputChange = (e) => {
+  handleStartValInputChange = (e) => {
     const {onStartValChange} = this.props
     onStartValChange(e.target.value)
-}
+  }
+
+
+  handleEndValInputChange = (e) => {
+    const {onEndValChange} = this.props
+    onEndValChange(e.target.value)
+  }
+
+
 
   render() {
     const { title, startVal, endVal } = this.props;
@@ -20,14 +28,14 @@ export default class RangeSelect extends Component {
           type="text" 
           value={startVal} 
           className={styles.rangeInput}  
-          onChange={this.handleInputChange}
+          onChange={this.handleStartValInputChange}
         />
         <span className={styles.textRange}>to</span>
         <input 
           type="text" 
           value={endVal} 
           className={styles.rangeInput}  
-          // onChange={this.handleInputChange}
+          onChange={this.handleEndValInputChange}
         />
       </div>
     );
