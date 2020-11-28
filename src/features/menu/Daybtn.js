@@ -1,16 +1,17 @@
 import React, { Component } from "react";
 import styles from "./Menu.module.css";
+
+const dayIndexToText = {0: "S", 1:"M", 2:"T", 3: "W", 4:"T", 5: "F", 6:"S"}
+
 export default class Daybtn extends Component {
+
   constructor(props) {
     super(props);
     const { day } = props
-    this.state = {
-      // Tues-Thurs should be active for default time period
-      active: day === "T" || day === "W"  ? true : false,
-    };
   }
   handleOnClick = () => {
-    this.setState({ active: !this.state.active });
+    const {updateSelectedDays, day} = this.props
+    updateSelectedDays(day)
   };
   render() {
     const { day } = this.props;
@@ -19,9 +20,9 @@ export default class Daybtn extends Component {
     return (
       <div
         onClick={this.handleOnClick}
-        className={this.state.active ? styles.dayBtnActive : styles.dayBtn}
+        className={this.props.selected ? styles.dayBtnActive : styles.dayBtn}
       >
-        <p>{day}</p>
+        <p>{dayIndexToText[day]}</p>
       </div>
     );
   }
