@@ -26,7 +26,6 @@ export default class Menu extends Component {
   };
 
   updateSelectedDays = (dayToChange) => {
-    console.log("will update selected days of week", dayToChange )
     const {selectedDaysofWeek}  = this.state
     let newSelectedDays
 
@@ -87,7 +86,6 @@ export default class Menu extends Component {
                     body: JSON.stringify({
                       "route": 0,
                       "date_range": ["2018-09-01", "2018-09-07"],
-                      // "days_of_week": [0, 3, 5],
                       "days_of_week": this.state.selectedDaysofWeek,
                       "hour_range": [7, 13]
                     })
