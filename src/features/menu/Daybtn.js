@@ -11,6 +11,9 @@ export default class Daybtn extends Component {
   }
   handleOnClick = () => {
     this.setState({ active: !this.state.active });
+    const {updateSelectedDays} = this.props
+    console.log("calling props handler update sel days")
+    updateSelectedDays()
   };
   render() {
     const { day } = this.props;

@@ -25,12 +25,12 @@ export default class Menu extends Component {
     });
   };
 
-  // updateSelectedDaysofWeek = (day) => {
-  //   console.log("will update selected days of week", day )
+  updateSelectedDays = (day) => {
+    console.log("will update selected days of week", day )
     // this.setState({
     //   selectedDaysofWeek: newDaysofWeek,
     // });
-  // }
+  }
 
   render() {
     return (
@@ -53,7 +53,7 @@ export default class Menu extends Component {
           <div className={styles.sideBar}></div>
           <div className={styles.menu}>
             <div className={styles.menuSelect}>
-              <DaysOfWeek selectedDays={this.state.selectedDaysofWeek}/>
+              <DaysOfWeek selectedDays={this.state.selectedDaysofWeek} updateSelectedDays={this.updateSelectedDays}/>
               <div>
                 <RangeSelect
                   title="Hour Range"

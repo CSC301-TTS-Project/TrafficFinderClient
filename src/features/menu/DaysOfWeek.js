@@ -4,9 +4,9 @@ import styles from "./Menu.module.css";
 import { v4 as uuid } from "uuid";
 export default class DaysOfWeek extends Component {
   render() {
-    const { selectedDays } = this.props
+    const { selectedDays, updateSelectedDays } = this.props
     console.log("selected days", selectedDays)
-    
+
     const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"];
     return (
       <div>
@@ -15,6 +15,7 @@ export default class DaysOfWeek extends Component {
           {daysOfWeek.map((day) => (
             <Daybtn key={uuid()} day={day} 
             selected={false} // here would check contents from selectedDays 
+            updateSelectedDays={updateSelectedDays}
             />
           ))}
         </div>
