@@ -34,17 +34,15 @@ export default class Menu extends Component {
       newSelectedDays = selectedDaysofWeek.filter(function(day) {
         return day !== dayToChange
       })
-      this.setState({
-        selectedDaysofWeek:newSelectedDays
-      })
     }
     else{
-      selectedDaysofWeek.push(dayToChange)
-      console.log("new selected days Menu comp", selectedDaysofWeek)
-      this.setState({
-        selectedDaysofWeek: selectedDaysofWeek,
-      });
+      newSelectedDays = [...selectedDaysofWeek]
+      newSelectedDays.push(dayToChange)
+      
     }
+    this.setState({
+      selectedDaysofWeek: newSelectedDays,
+    });
   }
 
   render() {
