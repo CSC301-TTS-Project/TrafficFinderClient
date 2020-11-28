@@ -50,6 +50,10 @@ export default class Menu extends Component {
     this.setState({selectedStartHour:newStartHour})
   }
 
+  updateSelectedEndHour = (newEndHour)=>{
+    this.setState({selectedEndHour:newEndHour})
+  }
+
   render() {
     return (
       <>
@@ -78,7 +82,7 @@ export default class Menu extends Component {
                   startVal={this.state.selectedStartHour}
                   endVal={this.state.selectedEndHour}
                   onStartValChange={this.updateSelectedStartHour}
-                  onEndValChange={()=>console.log("hi end val")}
+                  onEndValChange={this.updateSelectedEndHour}
                 />
                 <RangeSelect
                   title="Date Range"
