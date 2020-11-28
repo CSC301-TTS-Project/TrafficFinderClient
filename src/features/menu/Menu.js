@@ -16,7 +16,7 @@ export default class Menu extends Component {
     this.state = {
       menuOpen: false,
       selectedDaysofWeek:[],
-      selectedStartHour: undefined
+      selectedStartHour: undefined // format rn: '7' not '07:00'
       // selectedStartHour: "07:00"
 
     };
@@ -95,7 +95,7 @@ export default class Menu extends Component {
                       "route": 0,
                       "date_range": ["2018-09-01", "2018-09-07"],
                       "days_of_week": this.state.selectedDaysofWeek,
-                      "hour_range": [7, 13]
+                      "hour_range": [Number(this.state.selectedStartHour), 13]
                     })
                   }).then((response) => {
                     if (response.status !== 200) {
