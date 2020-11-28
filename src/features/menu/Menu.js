@@ -99,7 +99,7 @@ export default class Menu extends Component {
                       "route": 0,
                       "date_range": ["2018-09-01", "2018-09-07"],
                       "days_of_week": this.state.selectedDaysofWeek,
-                      "hour_range": [Number(this.state.selectedStartHour), 13]
+                      "hour_range": [Number(this.state.selectedStartHour), Number(this.state.selectedEndHour)]
                     })
                   }).then((response) => {
                     if (response.status !== 200) {
