@@ -15,7 +15,9 @@ export default class Menu extends Component {
     super();
     this.state = {
       menuOpen: false,
-      selectedDaysofWeek:[] 
+      selectedDaysofWeek:[],
+      selectedStartHour: undefined, // format rn: '7' not '07:00'
+      selectedEndHour: undefined // format rn: '7' not '07:00'
     };
   }
 
@@ -44,6 +46,14 @@ export default class Menu extends Component {
     });
   }
 
+  updateSelectedStartHour = (newStartHour)=>{
+    this.setState({selectedStartHour:newStartHour})
+  }
+
+  updateSelectedEndHour = (newEndHour)=>{
+    this.setState({selectedEndHour:newEndHour})
+  }
+
   render() {
     return (
       <>
@@ -69,8 +79,10 @@ export default class Menu extends Component {
               <div>
                 <RangeSelect
                   title="Hour Range"
-                  startVal="07:00"
-                  endVal="13:00"
+                  startVal={this.state.selectedStartHour}
+                  endVal={this.state.selectedEndHour}
+                  onStartValChange={this.updateSelectedStartHour}
+                  onEndValChange={this.updateSelectedEndHour}
                 />
                 <RangeSelect
                   title="Date Range"
@@ -87,7 +99,7 @@ export default class Menu extends Component {
                       "route": 0,
                       "date_range": ["2018-09-01", "2018-09-07"],
                       "days_of_week": this.state.selectedDaysofWeek,
-                      "hour_range": [7, 13]
+                      "hour_range": [Number(this.state.selectedStartHour), Number(this.state.selectedEndHour)]
                     })
                   }).then((response) => {
                     if (response.status !== 200) {
