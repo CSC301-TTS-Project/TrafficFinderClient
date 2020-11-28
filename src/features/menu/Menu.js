@@ -27,9 +27,18 @@ export default class Menu extends Component {
 
   updateSelectedDays = (day) => {
     console.log("will update selected days of week", day )
-    // this.setState({
-    //   selectedDaysofWeek: newDaysofWeek,
-    // });
+    const {selectedDaysofWeek}  = this.state
+    
+
+    // if day in selected days: remove
+
+    // else: append
+    selectedDaysofWeek.push(day)
+    console.log("new selected days Menu comp", selectedDaysofWeek)
+
+    this.setState({
+      selectedDaysofWeek: selectedDaysofWeek,
+    });
   }
 
   render() {
