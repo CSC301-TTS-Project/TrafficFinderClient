@@ -15,7 +15,7 @@ export default class Menu extends Component {
     super();
     this.state = {
       menuOpen: false,
-      selectedDaysofWeek:[] // [0, 3, 5]
+      selectedDaysofWeek:[] 
     };
   }
 
@@ -87,8 +87,8 @@ export default class Menu extends Component {
                     body: JSON.stringify({
                       "route": 0,
                       "date_range": ["2018-09-01", "2018-09-07"],
-                      "days_of_week": [0, 3, 5],
-                      // "days_of_week": this.state.selectedDaysofWeek,
+                      // "days_of_week": [0, 3, 5],
+                      "days_of_week": this.state.selectedDaysofWeek,
                       "hour_range": [7, 13]
                     })
                   }).then((response) => {
