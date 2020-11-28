@@ -78,7 +78,7 @@ export default class Menu extends Component {
                   title="Hour Range"
                   startVal={this.state.selectedStartHour}
                   endVal="13:00"
-                  onStartTimeChange={this.updateSelectedStartHour}
+                  onStartValChange={this.updateSelectedStartHour}
                 />
                 <RangeSelect
                   title="Date Range"

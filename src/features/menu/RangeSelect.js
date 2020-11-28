@@ -11,12 +11,12 @@ export default class RangeSelect extends Component {
   handleInputChange = (e) => {
     console.log("input change")
 
-    const {onStartTimeChange} = this.props
-    onStartTimeChange(e.target.value)
+    const {onStartValChange} = this.props
+    onStartValChange(e.target.value)
      
     // this.setState({
     //   newStartVal: e.target.value
-    // });
+    // });f
 }
 
   render() {
