@@ -15,6 +15,7 @@ export default class Menu extends Component {
     super();
     this.state = {
       menuOpen: false,
+      selectedDaysofWeek:[] // [0, 3, 5]
     };
   }
 
@@ -23,6 +24,13 @@ export default class Menu extends Component {
       menuOpen: !this.state.menuOpen,
     });
   };
+
+  // updateSelectedDaysofWeek = (day) => {
+  //   console.log("will update selected days of week", day )
+    // this.setState({
+    //   selectedDaysofWeek: newDaysofWeek,
+    // });
+  // }
 
   render() {
     return (
@@ -45,7 +53,7 @@ export default class Menu extends Component {
           <div className={styles.sideBar}></div>
           <div className={styles.menu}>
             <div className={styles.menuSelect}>
-              <DaysOfWeek />
+              <DaysOfWeek selectedDays={this.state.selectedDaysofWeek}/>
               <div>
                 <RangeSelect
                   title="Hour Range"
@@ -67,6 +75,7 @@ export default class Menu extends Component {
                       "route": 0,
                       "date_range": ["2018-09-01", "2018-09-07"],
                       "days_of_week": [0, 3, 5],
+                      // "days_of_week": this.state.selectedDaysofWeek,
                       "hour_range": [7, 13]
                     })
                   }).then((response) => {

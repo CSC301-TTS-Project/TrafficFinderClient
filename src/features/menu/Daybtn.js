@@ -19,7 +19,8 @@ export default class Daybtn extends Component {
     return (
       <div
         onClick={this.handleOnClick}
-        className={this.state.active ? styles.dayBtnActive : styles.dayBtn}
+        // className={this.state.active ? styles.dayBtnActive : styles.dayBtn}
+        className={this.props.selected ? styles.dayBtnActive : styles.dayBtn}
       >
         <p>{day}</p>
       </div>
