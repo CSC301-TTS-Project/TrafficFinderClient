@@ -17,7 +17,9 @@ export default class Menu extends Component {
       menuOpen: false,
       selectedDaysofWeek:[],
       selectedStartHour: undefined, // format rn: '7' not '07:00'
-      selectedEndHour: undefined // format rn: '7' not '07:00'
+      selectedEndHour: undefined, // format rn: '7' not '07:00',
+      selectedStartDate: undefined, // format rn: '7' not '07:00'
+
     };
   }
 
@@ -54,6 +56,10 @@ export default class Menu extends Component {
     this.setState({selectedEndHour:newEndHour})
   }
 
+  updateSelectedStartDate = (newStartDate)=>{
+    this.setState({selectedStartDate:newStartDate})
+  }
+
   render() {
     return (
       <>
@@ -86,7 +92,8 @@ export default class Menu extends Component {
                 />
                 <RangeSelect
                   title="Date Range"
-                  startVal="2018-09-01"
+                  startVal={this.state.selectedStartDate}
+                  onStartValChange={this.updateSelectedStartDate}
                   endVal="2018-09-07"
                 />
               </div>
@@ -97,7 +104,7 @@ export default class Menu extends Component {
                     method: "POST",
                     body: JSON.stringify({
                       "route": 0,
-                      "date_range": ["2018-09-01", "2018-09-07"],
+                      "date_range": [this.state.selectedStartDate, "2018-09-07"],
                       "days_of_week": this.state.selectedDaysofWeek,
                       "hour_range": [Number(this.state.selectedStartHour), Number(this.state.selectedEndHour)]
                     })
