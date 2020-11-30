@@ -8,15 +8,15 @@ import Fade from "@material-ui/core/Fade";
 import styles from "./Menu.module.css";
 
 const checkLists = [
+  "Average travel time",
+  "Standard deviation of travel time",
   "Min travel time",
   "Max travel time",
-  "Number of days",
-  "Average travel time",
   "Median speed",
-  "85th percentile",
-  "95th percentile",
-  "Standard Deviation",
-  "Sample Count Observations &  complete coverage",
+  "85th percentile speed",
+  "95th percentile speed", 
+  "Sample count (observations and complete coverage)",
+  "Number of days"
 ];
 
 const CheckBox = ({ id, value, checked, onChange, title }) => {
