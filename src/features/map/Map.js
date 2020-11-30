@@ -19,14 +19,8 @@ class Map extends React.Component {
       isBuildingPath: false,
     };
   }
-  componentDidUpdate() {
-    console.log("State:");
-    console.log(this.state);
-  }
 
   componentDidMount() {
-    console.log("State:");
-    console.log(this.state);
     this.map = new mapboxgl.Map({
       container: this.container,
       style: "mapbox://styles/mapbox/streets-v11",
