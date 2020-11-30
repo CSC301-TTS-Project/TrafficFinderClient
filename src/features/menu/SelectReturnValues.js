@@ -16,7 +16,7 @@ const checkLists = [
   "85th percentile speed",
   "95th percentile speed", 
   "Sample count (observations and complete coverage)",
-  "Number of days"
+  "Number of days",
 ];
 
 const CheckBox = ({ id, value, checked, onChange, title }) => {
