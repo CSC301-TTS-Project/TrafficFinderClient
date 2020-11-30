@@ -57,6 +57,7 @@ class Map extends React.Component {
       });
       fetch(`${ENDPOINT}/api/getRoute`, {
         method: "POST",
+        //Fetch first and only route on map
         body: JSON.stringify({ route: 0 }),
       })
         .then((response) => {
@@ -64,10 +65,7 @@ class Map extends React.Component {
             console.log("Internal error, status code: " + response.status);
           } else {
             response.json().then((data) => {
-              console.log(`Succesfelly fetched paths`);
-              console.log(data);
               const pathNodes = data;
-
               for (let i = 0; i < pathNodes.length; i++) {
                 this.addMarker(pathNodes[i], i);
               }
@@ -80,7 +78,6 @@ class Map extends React.Component {
     });
 
     this.map.on("mousedown", (e) => {
-      // this.addMarker(e.lngLat)
       if (e.originalEvent.button === 0) {
         this.addToRoute(
           e.lngLat,
@@ -99,8 +96,7 @@ class Map extends React.Component {
     const newLine = {
       type: "Feature",
       properties: {
-        // color: "#B5B5FE" // soft purple
-        color: "#000000", // stronger purple
+        color: "#000000",
       },
       geometry: {
         type: "LineString",
@@ -122,28 +118,13 @@ class Map extends React.Component {
     const newLine = {
       type: "Feature",
       properties: {
-        // color: "#B5B5FE" // soft purple
-        color: "#9A21F9", // stronger purple
+        color: "#9A21F9",
       },
       geometry: {
         type: "LineString",
         coordinates: coords,
       },
     };
-
-    // Add Feature object to features array to add points
-    // Example new line uncomment when needed
-    // const newLine = {
-    //   type: "Feature",
-    //   properties: {
-    //     // color: "#B5B5FE" // soft purple
-    //     color: "#9A21F9", // stronger purple
-    //   },
-    //   geometry: {
-    //     type: "LineString",
-    //     coordinates: coords,
-    //   },
-    // };
 
     const newFeatures = this.map.getSource("lines")["_data"].features;
     newFeatures.push(newLine);
@@ -152,15 +133,12 @@ class Map extends React.Component {
       ...this.map.getSource("lines")["_data"],
       newFeatures,
     });
-    // this.setState({
-    //   isBuildingPath: false,
-    // });
   };
 
-  addMarker(obj, index) {
+  addMarker(nodeObj, index) {
     // const { lng, lat } = lngLat;
-    const lng = obj["end_node"]["lng"];
-    const lat = obj["end_node"]["lat"];
+    const lng = nodeObj["end_node"]["lng"];
+    const lat = nodeObj["end_node"]["lat"];
 
     if (!this.state.isBuildingPath) {
       let new_node = new mapboxgl.Marker()
@@ -173,7 +151,7 @@ class Map extends React.Component {
       });
       //First insert_node call has been made: start_node coords == end_node coords
       const newPaths = this.state.paths;
-      newPaths.push(obj);
+      newPaths.push(nodeObj);
       this.setState({ paths: newPaths });
       this.setState({ isBuildingPath: true });
       console.log("Ran as first node");
@@ -181,13 +159,12 @@ class Map extends React.Component {
       new mapboxgl.Marker().setLngLat([lng, lat]).addTo(this.map);
       //Second insert call has been made and start_node coords !== end_node coords
       const newPaths = this.state.paths;
-      newPaths.push(obj);
+      newPaths.push(nodeObj);
 
       this.setState(
         { paths: newPaths },
         this.drawPath(this.state.paths.length - 1)
       );
-      console.log("Length of Paths Var is: " + this.state.paths.length);
     }
   }
 
@@ -209,8 +186,6 @@ class Map extends React.Component {
           return;
         }
         response.json().then((data) => {
-          console.log("Retrieved insertNode data is:");
-          console.log(data);
           this.addMarker(data[index], index);
         });
       })
@@ -293,8 +268,6 @@ class Map extends React.Component {
         }
         response.json().then((data) => {
           console.log(JSON.parse(data));
-          // removeMarker()
-          // addMarker()
         });
       })
       .catch((error) => {
