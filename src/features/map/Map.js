@@ -183,7 +183,7 @@ class Map extends React.Component {
       .addTo(this.map);
   }
 
-  addMarker(obj, index) {
+  addMarker(nodeObj, index) {
     // const { lng, lat } = lngLat;
     const lng = nodeObj["end_node"]["lng"];
     const lat = nodeObj["end_node"]["lat"];
@@ -292,7 +292,7 @@ class Map extends React.Component {
 
   removeMarker(data, index) {
     let new_paths = this.state.paths;
-    if (new_paths.length == 0) {
+    if (new_paths.length === 0) {
       return
     }
     this.removePath(index);
@@ -314,7 +314,7 @@ class Map extends React.Component {
       }
     }
     this.setState({ paths: new_paths })
-    if (new_paths.length == 0) {
+    if (new_paths.length === 0) {
       return
     }
     this.drawPath(j);
