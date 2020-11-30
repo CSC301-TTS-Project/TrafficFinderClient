@@ -105,7 +105,7 @@ export default function TransitionsModal() {
         }}
       >
         <Fade in={open}>
-          <div className={classes.paper} style={{ width: 500 }}>
+          <div className={classes.paper} style={{ width: 600 }}>
             <h1 className={styles.modalTitle}>Return Values</h1>
             <Grid container spacing={3}>
               {checkLists.map((item, index) => {
