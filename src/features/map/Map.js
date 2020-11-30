@@ -49,16 +49,38 @@ class Map extends React.Component {
           "line-color": ["get", "color"],
         },
       });
+      fetch(`${ENDPOINT}/api/getRoute`, {
+        method: "POST",
+        //Fetch first and only route on map
+        body: JSON.stringify({ route: 0 }),
+      })
+        .then((response) => {
+          if (response.status !== 200) {
+            console.log("Internal error, status code: " + response.status);
+          } else {
+            response.json().then((data) => {
+              const pathNodes = data;
+              for (let i = 0; i < pathNodes.length; i++) {
+                this.addMarker(pathNodes[i], i);
+              }
+            });
+          }
+        })
+        .catch((error) => {
+          console.log("Could not get route data: " + error);
+        });
     });
 
-    this.map.on('mousedown', (e) => {
-      // this.addMarker(e.lngLat)
+    this.map.on("mousedown", (e) => {
       if (e.originalEvent.button === 0) {
-        this.addToRoute(e.lngLat, this.state.route_index, this.state.paths.length)
+        this.addToRoute(
+          e.lngLat,
+          this.state.route_index,
+          this.state.paths.length
+        );
       } else {
-        this.deleteFromRoute(this.state.route_index, 0)
+        this.deleteFromRoute(this.state.route_index, 0);
       }
-
     });
   }
 
@@ -68,14 +90,13 @@ class Map extends React.Component {
     const newLine = {
       type: "Feature",
       properties: {
-        // color: "#B5B5FE" // soft purple
-        color: "#000000", // stronger purple
+        color: "#000000",
       },
       geometry: {
         type: "LineString",
         coordinates: coords,
       },
-    }
+    };
     const newFeatures = this.map.getSource("lines")["_data"].features;
     newFeatures.push(newLine);
 
@@ -83,7 +104,7 @@ class Map extends React.Component {
       ...this.map.getSource("lines")["_data"],
       newFeatures,
     });
-  }
+  };
 
   drawPath = (index) => {
     const data = this.state.paths[index];
@@ -91,28 +112,13 @@ class Map extends React.Component {
     const newLine = {
       type: "Feature",
       properties: {
-        // color: "#B5B5FE" // soft purple
-        color: "#9A21F9", // stronger purple
+        color: "#9A21F9",
       },
       geometry: {
         type: "LineString",
         coordinates: coords,
       },
     };
-
-    // Add Feature object to features array to add points
-    // Example new line uncomment when needed
-    // const newLine = {
-    //   type: "Feature",
-    //   properties: {
-    //     // color: "#B5B5FE" // soft purple
-    //     color: "#9A21F9", // stronger purple
-    //   },
-    //   geometry: {
-    //     type: "LineString",
-    //     coordinates: coords,
-    //   },
-    // };
 
     const newFeatures = this.map.getSource("lines")["_data"].features;
     newFeatures.push(newLine);
@@ -121,107 +127,105 @@ class Map extends React.Component {
       ...this.map.getSource("lines")["_data"],
       newFeatures,
     });
-    // this.setState({
-    //   isBuildingPath: false,
-    // });
   };
 
-  addMarker(obj, index) {
+  addMarker(nodeObj, index) {
     // const { lng, lat } = lngLat;
-    const lng = obj["end_node"]["lng"];
-    const lat = obj["end_node"]["lat"];
+    const lng = nodeObj["end_node"]["lng"];
+    const lat = nodeObj["end_node"]["lat"];
 
     if (!this.state.isBuildingPath) {
       let new_node = new mapboxgl.Marker()
         .setLngLat([lng, lat])
         .addTo(this.map);
-      let html_element = new_node.getElement()
+      let html_element = new_node.getElement();
       html_element.addEventListener("click", () => {
-        console.log("Want to delete Node: " + index)
-        this.deleteFromRoute(this.state.route_index, index)
-      })
+        console.log("Want to delete Node: " + index);
+        this.deleteFromRoute(this.state.route_index, index);
+      });
       //First insert_node call has been made: start_node coords == end_node coords
       const newPaths = this.state.paths;
-      newPaths.push(obj);
+      newPaths.push(nodeObj);
       this.setState({ paths: newPaths });
       this.setState({ isBuildingPath: true });
-      console.log("Ran as first node")
+      console.log("Ran as first node");
     } else if (this.state.isBuildingPath) {
-      new mapboxgl.Marker()
-        .setLngLat([lng, lat])
-        .addTo(this.map);
+      new mapboxgl.Marker().setLngLat([lng, lat]).addTo(this.map);
       //Second insert call has been made and start_node coords !== end_node coords
       const newPaths = this.state.paths;
-      newPaths.push(obj);
-      console.log("The New Paths is:");
-      console.log(newPaths)
-      this.setState({ paths: newPaths }, this.drawPath(this.state.paths.length - 1));
-      console.log("Length of Paths Var is: " + this.state.paths.length)
+      newPaths.push(nodeObj);
+
+      this.setState(
+        { paths: newPaths },
+        this.drawPath(this.state.paths.length - 1)
+      );
     }
   }
 
   addToRoute(lngLat, route, index) {
-    const { lng, lat } = lngLat
+    const { lng, lat } = lngLat;
     const body = {
       index,
       route,
       lat,
-      lng
-    }
+      lng,
+    };
     fetch(`${ENDPOINT}/api/insertNode`, {
       method: "POST",
-      body: JSON.stringify(body)
-    }).then((response) => {
-      if (response.status !== 200) {
-        console.log("There was a problem, Status code: " + response.status)
-        return
-      }
-      response.json().then((data) => {
-        console.log("Retrieved insertNode data is:")
-        console.log(data)
-        this.addMarker(data[index], index)
-      })
-    }).catch((error) => {
-      console.log("Fetch error " + error)
+      body: JSON.stringify(body),
     })
+      .then((response) => {
+        if (response.status !== 200) {
+          console.log("There was a problem, Status code: " + response.status);
+          return;
+        }
+        response.json().then((data) => {
+          this.addMarker(data[index], index);
+        });
+      })
+      .catch((error) => {
+        console.log("Fetch error " + error);
+      });
   }
 
   deleteFromRoute(route, index) {
     const body = {
       index,
-      route
-    }
+      route,
+    };
     fetch(`${ENDPOINT}/api/deleteNode`, {
       method: "DELETE",
-      body: JSON.stringify(body)
-    }).then((response) => {
-      if (response.status !== 200) {
-        console.log("There was a problem, Status code: " + response.status)
-        return
-      }
-      response.json().then((data) => {
-        console.log("Retrieved Delete Node data is:")
-        console.log(data)
-        this.removeMarker(data, index)
-      })
-    }).catch((error) => {
-      console.log("Fetch error " + error)
+      body: JSON.stringify(body),
     })
+      .then((response) => {
+        if (response.status !== 200) {
+          console.log("There was a problem, Status code: " + response.status);
+          return;
+        }
+        response.json().then((data) => {
+          console.log("Retrieved Delete Node data is:");
+          console.log(data);
+          this.removeMarker(data, index);
+        });
+      })
+      .catch((error) => {
+        console.log("Fetch error " + error);
+      });
   }
 
   removeMarker(data, index) {
-   let new_paths = this.state.paths;
-    if (new_paths.length == 0){
-    	return 
+    let new_paths = this.state.paths;
+    if (new_paths.length == 0) {
+      return;
     }
     this.removePath(index);
     new_paths.splice(index, 1);
     let to_change = index;
     let j = 0;
     for (let i = 0; i < this.state.paths.length; i++) {
-      console.log(new_paths[i])
+      console.log(new_paths[i]);
       if (i === to_change - 1) {
-        console.log(data[to_change])
+        console.log(data[to_change]);
         new_paths[i].end_node = data[to_change].end_node;
       }
       if (i === to_change) {
@@ -232,37 +236,37 @@ class Map extends React.Component {
         break;
       }
     }
-    this.setState({ paths: new_paths })
-    if (new_paths.length == 0){
-    	return 
+    this.setState({ paths: new_paths });
+    if (new_paths.length == 0) {
+      return;
     }
     this.drawPath(j);
   }
 
   modifyRoute(lngLat, route, index) {
-    const { lng, lat } = lngLat
+    const { lng, lat } = lngLat;
     const body = {
       index,
       route,
       lat,
-      lng
-    }
+      lng,
+    };
     fetch(`${ENDPOINT}/api/modifyNode`, {
       method: "PATCH",
-      body: JSON.stringify(body)
-    }).then((response) => {
-      if (response.status !== 200) {
-        console.log("There was a problem, Status code: " + response.status)
-        return
-      }
-      response.json().then((data) => {
-        console.log(JSON.parse(data))
-        // removeMarker()
-        // addMarker()
-      })
-    }).catch((error) => {
-      console.log("Fetch error " + error)
+      body: JSON.stringify(body),
     })
+      .then((response) => {
+        if (response.status !== 200) {
+          console.log("There was a problem, Status code: " + response.status);
+          return;
+        }
+        response.json().then((data) => {
+          console.log(JSON.parse(data));
+        });
+      })
+      .catch((error) => {
+        console.log("Fetch error " + error);
+      });
   }
 
   componentWillUnmount() {
