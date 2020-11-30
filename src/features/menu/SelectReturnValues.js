@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TransitionsModal() {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const [checkedItems, setCheckedItems] = React.useState({});
 
   const handleChange = (e) => {
