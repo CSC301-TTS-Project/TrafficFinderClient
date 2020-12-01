@@ -1,10 +1,29 @@
 import React from "react";
+// require("./mapActions/getMapboxToken") 
 import mapboxgl from "mapbox-gl";
-import { getHereToken, getMapboxToken } from "./mapActions";
 import "./Map.module.css";
 import Menu from "../menu/Menu";
 
-mapboxgl.accessToken = getMapboxToken();
+function getMapboxToken () {
+  fetch(`${ENDPOINT}/api/getKeys`, {
+      method: "POST",
+    })
+    .then((response) => {
+      if (response.status !== 200) {
+        console.log("Internal error, status code: " + response.status);
+      } else {
+        response.json().then((data) => {
+          mapboxgl.accessToken = (data['MAPBOX_PUBLIC_KEY'])
+          return data['MAPBOX_PUBLIC_KEY']
+          
+        });
+      }
+    })
+    .catch((error) => {
+      console.log("Could not get api keys: " + error);
+  });
+};
+
 
 class Map extends React.Component {
   constructor(props) {
@@ -19,7 +38,13 @@ class Map extends React.Component {
     };
   }
 
+  componentWillMount(){
+    
+    
+  }
+
   componentDidMount() {
+    getMapboxToken()
     this.map = new mapboxgl.Map({
       container: this.container,
       style: "mapbox://styles/mapbox/streets-v11",
