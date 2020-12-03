@@ -136,9 +136,9 @@ export default class Menu extends Component {
                   }
                   }/>
                   <p style={{margin:'0px', textAlign:'center'}}>
-                    For data download, ensure:
-                    <li>A segment is drawn on the map</li>
-                    <li>All fields in the form are filled in</li>
+                    For data download:
+                    <li>A segment must be drawn on the map</li>
+                    <li>All fields in the form must be filled in</li>
                   </p>                
               </>
               </div>
