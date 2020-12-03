@@ -105,35 +105,42 @@ export default class Menu extends Component {
               </div>
               <div>
                 <SelectReturnValues />
-                <MenuButton name="Download as CSV" onClick={() => {
-                  fetch(`${ENDPOINT}/api/getTrafficData`, {
-                    method: "POST",
-                    body: JSON.stringify({
-                      "route": 0,
-                      "date_range": [this.state.selectedStartDate, this.state.selectedEndDate],
-                      "days_of_week": this.state.selectedDaysofWeek,
-                      "hour_range": [Number(this.state.selectedStartHour), Number(this.state.selectedEndHour)]
+                <>
+                  <MenuButton name="Download as CSV" onClick={() => {
+                    fetch(`${ENDPOINT}/api/getTrafficData`, {
+                      method: "POST",
+                      body: JSON.stringify({
+                        "route": 0,
+                        "date_range": [this.state.selectedStartDate, this.state.selectedEndDate],
+                        "days_of_week": this.state.selectedDaysofWeek,
+                        "hour_range": [Number(this.state.selectedStartHour), Number(this.state.selectedEndHour)]
+                      })
+                    }).then((response) => {
+                      if (response.status !== 200) {
+                        console.log("There was a problem, Status code: " + response.status)
+                        return
+                      } else {
+                        return response.blob()
+                      }
+                    }).then((blob) => {
+                      const url = window.URL.createObjectURL(new Blob([blob]));
+                      const link = document.createElement('a');
+                      link.href = url;
+                      link.setAttribute('download', 'data.csv');
+                      document.body.appendChild(link);
+                      link.click();
+                      link.parentNode.removeChild(link);
+                    }).catch((error) => {
+                      console.log("Fetch error " + error)
                     })
-                  }).then((response) => {
-                    if (response.status !== 200) {
-                      console.log("There was a problem, Status code: " + response.status)
-                      return
-                    } else {
-                      return response.blob()
-                    }
-                  }).then((blob) => {
-                    const url = window.URL.createObjectURL(new Blob([blob]));
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.setAttribute('download', 'data.csv');
-                    document.body.appendChild(link);
-                    link.click();
-                    link.parentNode.removeChild(link);
-                  }).catch((error) => {
-                    console.log("Fetch error " + error)
-                  })
-                }
-                }/>
+                  }
+                  }/>
+                  <p style={{margin:'0px', textAlign:'center'}}>
+                    For data download, ensure:
+                    <li>A segment is drawn on the map</li>
+                    <li>All fields in the form are filled in</li>
+                  </p>                
+              </>
               </div>
             </div>
           </div>
