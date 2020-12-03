@@ -15,7 +15,8 @@ export default class Menu extends Component {
     super();
     this.state = {
       menuOpen: false,
-      selectedDaysofWeek:[],
+      selections: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      selectedDaysofWeek: [],
       selectedStartHour: undefined, // format rn: '7' not '07:00'
       selectedEndHour: undefined, // format rn: '7' not '07:00',
       selectedStartDate: undefined, //eg "2018-09-01"
@@ -30,40 +31,40 @@ export default class Menu extends Component {
   };
 
   updateSelectedDays = (dayToChange) => {
-    const {selectedDaysofWeek}  = this.state
+    const { selectedDaysofWeek } = this.state
     let newSelectedDays
 
-    if(selectedDaysofWeek.includes(dayToChange)){
-      newSelectedDays = selectedDaysofWeek.filter(function(day) {
+    if (selectedDaysofWeek.includes(dayToChange)) {
+      newSelectedDays = selectedDaysofWeek.filter(function (day) {
         return day !== dayToChange
       })
     }
-    else{
+    else {
       newSelectedDays = [...selectedDaysofWeek]
       newSelectedDays.push(dayToChange)
-      
+
     }
     this.setState({
       selectedDaysofWeek: newSelectedDays,
     });
   }
 
-  updateSelectedStartHour = (newStartHour)=>{
-    this.setState({selectedStartHour:newStartHour})
+  updateSelectedStartHour = (newStartHour) => {
+    this.setState({ selectedStartHour: newStartHour })
   }
 
-  updateSelectedEndHour = (newEndHour)=>{
-    this.setState({selectedEndHour:newEndHour})
+  updateSelectedEndHour = (newEndHour) => {
+    this.setState({ selectedEndHour: newEndHour })
   }
 
-  updateSelectedStartDate = (newStartDate)=>{
-    this.setState({selectedStartDate:newStartDate})
+  updateSelectedStartDate = (newStartDate) => {
+    this.setState({ selectedStartDate: newStartDate })
   }
 
-  updateSelectedEndDate = (newEndDate)=>{
-    this.setState({selectedEndDate:newEndDate})
+  updateSelectedEndDate = (newEndDate) => {
+    this.setState({ selectedEndDate: newEndDate })
   }
-  
+
 
   render() {
     return (
@@ -86,7 +87,7 @@ export default class Menu extends Component {
           <div className={styles.sideBar}></div>
           <div className={styles.menu}>
             <div className={styles.menuSelect}>
-              <DaysOfWeek selectedDays={this.state.selectedDaysofWeek} updateSelectedDays={this.updateSelectedDays}/>
+              <DaysOfWeek selectedDays={this.state.selectedDaysofWeek} updateSelectedDays={this.updateSelectedDays} />
               <div>
                 <RangeSelect
                   title="Hour Range"
@@ -108,12 +109,7 @@ export default class Menu extends Component {
                 <MenuButton name="Download as CSV" onClick={() => {
                   fetch(`${ENDPOINT}/api/getTrafficData`, {
                     method: "POST",
-                    body: JSON.stringify({
-                      "route": 0,
-                      "date_range": [this.state.selectedStartDate, this.state.selectedEndDate],
-                      "days_of_week": this.state.selectedDaysofWeek,
-                      "hour_range": [Number(this.state.selectedStartHour), Number(this.state.selectedEndHour)]
-                    })
+                    body: JSON.stringify({ "selections": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], "route": 0, "date_range": ["2018-09-01", "2018-09-02"], "days_of_week": [1, 2, 3, 4, 5, 6, 7], "hour_range": [13, 16] })
                   }).then((response) => {
                     if (response.status !== 200) {
                       console.log("There was a problem, Status code: " + response.status)
@@ -133,7 +129,7 @@ export default class Menu extends Component {
                     console.log("Fetch error " + error)
                   })
                 }
-                }/>
+                } />
               </div>
             </div>
           </div>
