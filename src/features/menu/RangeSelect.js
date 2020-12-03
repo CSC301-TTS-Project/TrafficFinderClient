@@ -32,7 +32,6 @@ export default class RangeSelect extends Component {
             onChange={this.handleStartValInputChange}
           />
           <span className={styles.textRange}>
-          {}
           {upperBoundInclusive? 'to (including)': 'to (excluding)'}
           </span>
           <input 
