@@ -14,7 +14,7 @@ export default class Menu extends Component {
   constructor() {
     super();
     this.state = {
-      menuOpen: false,
+      menuOpen: true,
       selectedDaysofWeek:[],
       selectedStartHour: undefined,
       selectedEndHour: undefined,
