@@ -24,7 +24,7 @@ export default class RangeSelect extends Component {
     return (
       <div>
         <h4 className={styles.menuTitle}>{title}</h4>
-        <div style={{display: 'flex', justifyContent:'center'}}>
+        <div className={styles.rangeContainer}>
           <input 
             type="text" 
             value={startVal} 
