@@ -19,7 +19,7 @@ export default class RangeSelect extends Component {
 
 
   render() {
-    const { title, startVal, endVal } = this.props;
+    const { title, startVal, endVal, upperBoundInclusive } = this.props;
 
     return (
       <div>
@@ -30,7 +30,10 @@ export default class RangeSelect extends Component {
           className={styles.rangeInput}  
           onChange={this.handleStartValInputChange}
         />
-        <span className={styles.textRange}>to</span>
+        <span className={styles.textRange}>
+        {}
+        {upperBoundInclusive? 'to (including)': 'to (excluding)'}
+        </span>
         <input 
           type="text" 
           value={endVal} 

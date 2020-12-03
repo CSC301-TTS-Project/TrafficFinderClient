@@ -81,14 +81,14 @@
 }
 
 .textRange {
-  padding: 0 5%;
-  font-size: 0.8rem;
+  padding: 0 3%;
+  font-size: 0.7rem;
 }
 .rangeInput {
   border: none;
   background: #ffffff;
   box-sizing: border-box;
-  width: 40%;
+  width: 30%;
   text-align: center;
   height: 2em;
 }

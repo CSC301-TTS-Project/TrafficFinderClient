@@ -94,6 +94,7 @@ export default class Menu extends Component {
                   endVal={this.state.selectedEndHour}
                   onStartValChange={this.updateSelectedStartHour}
                   onEndValChange={this.updateSelectedEndHour}
+                  upperBoundInclusive
                 />
                 <RangeSelect
                   title="Date Range (YYYY-MM-DD)"
@@ -101,6 +102,7 @@ export default class Menu extends Component {
                   onStartValChange={this.updateSelectedStartDate}
                   endVal={this.state.selectedEndDate}
                   onEndValChange={this.updateSelectedEndDate}
+                  upperBoundInclusive
                 />
               </div>
               <div>
