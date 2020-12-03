@@ -16,8 +16,8 @@ export default class Menu extends Component {
     this.state = {
       menuOpen: false,
       selectedDaysofWeek:[],
-      selectedStartHour: undefined, // format rn: '7' not '07:00'
-      selectedEndHour: undefined, // format rn: '7' not '07:00',
+      selectedStartHour: undefined,
+      selectedEndHour: undefined,
       selectedStartDate: undefined, //eg "2018-09-01"
       selectedEndDate: undefined //eg "2018-09-07"
     };
@@ -89,14 +89,14 @@ export default class Menu extends Component {
               <DaysOfWeek selectedDays={this.state.selectedDaysofWeek} updateSelectedDays={this.updateSelectedDays}/>
               <div>
                 <RangeSelect
-                  title="Hour Range"
+                  title="Hour Range (0-23)"
                   startVal={this.state.selectedStartHour}
                   endVal={this.state.selectedEndHour}
                   onStartValChange={this.updateSelectedStartHour}
                   onEndValChange={this.updateSelectedEndHour}
                 />
                 <RangeSelect
-                  title="Date Range"
+                  title="Date Range (YYYY-MM-DD)"
                   startVal={this.state.selectedStartDate}
                   onStartValChange={this.updateSelectedStartDate}
                   endVal={this.state.selectedEndDate}
