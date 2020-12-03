@@ -24,22 +24,24 @@ export default class RangeSelect extends Component {
     return (
       <div>
         <h4 className={styles.menuTitle}>{title}</h4>
-        <input 
-          type="text" 
-          value={startVal} 
-          className={styles.rangeInput}  
-          onChange={this.handleStartValInputChange}
-        />
-        <span className={styles.textRange}>
-        {}
-        {upperBoundInclusive? 'to (including)': 'to (excluding)'}
-        </span>
-        <input 
-          type="text" 
-          value={endVal} 
-          className={styles.rangeInput}  
-          onChange={this.handleEndValInputChange}
-        />
+        <div style={{display: 'flex', justifyContent:'center'}}>
+          <input 
+            type="text" 
+            value={startVal} 
+            className={styles.rangeInput}  
+            onChange={this.handleStartValInputChange}
+          />
+          <span className={styles.textRange}>
+          {}
+          {upperBoundInclusive? 'to (including)': 'to (excluding)'}
+          </span>
+          <input 
+            type="text" 
+            value={endVal} 
+            className={styles.rangeInput}  
+            onChange={this.handleEndValInputChange}
+          />
+        </div>
       </div>
     );
   }
