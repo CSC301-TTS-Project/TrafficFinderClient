@@ -34,6 +34,11 @@ class Map extends React.Component {
           className={styles.primaryBtn}
           onClick={() => {
             const marker = this.state.markersDetailInfo[markerId];
+            console.log("marker id");
+            console.log(markerId);
+            console.log("marker info");
+            console.log(this.state.markersDetailInfo);
+
             marker.remove();
 
             // find the index of the deletion marker in the path
@@ -49,8 +54,8 @@ class Map extends React.Component {
               }
             }
             const routeId = 0;
-            console.log("the deletion index is ");
-            console.log(deletionIndex);
+            // console.log("the deletion index is ");
+            // console.log(deletionIndex);
             this.deleteFromRoute(routeId, deletionIndex);
 
             // After successfully deleted marker, we remove the deleted marker id from
@@ -109,7 +114,7 @@ class Map extends React.Component {
             response.json().then((data) => {
               const pathNodes = data;
               for (let i = 0; i < pathNodes.length; i++) {
-                this.addMarker(pathNodes[i], i);
+                this.addMarker(pathNodes[i]);
               }
             });
           }
@@ -124,7 +129,7 @@ class Map extends React.Component {
         // wait until the the state.markerDeletionWindowOpen is updated when marker it self is been clicked
         // the state.markerDeletionWindowOpen is updated at
         setTimeout(() => {
-          console.log("the marker itself has been clicked is");
+          // console.log("the marker itself has been clicked is");
           console.log(this.state.markerDeletionWindowOpen);
           if (this.state.markerDeletionWindowOpen === false) {
             this.addToRoute(
@@ -144,8 +149,7 @@ class Map extends React.Component {
     const newLine = {
       type: "Feature",
       properties: {
-        // color: "#B5B5FE" // soft purple
-        color: "#000000", // stronger purple
+        color: "#000000",
       },
       geometry: {
         type: "LineString",
@@ -154,6 +158,7 @@ class Map extends React.Component {
     };
     const newFeatures = this.map.getSource("lines")["_data"].features;
     newFeatures.push(newLine);
+    // console.log(index);
 
     this.map.getSource("lines").setData({
       ...this.map.getSource("lines")["_data"],
@@ -175,20 +180,6 @@ class Map extends React.Component {
         coordinates: coords,
       },
     };
-
-    // Add Feature object to features array to add points
-    // Example new line uncomment when needed
-    // const newLine = {
-    //   type: "Feature",
-    //   properties: {
-    //     // color: "#B5B5FE" // soft purple
-    //     color: "#9A21F9", // stronger purple
-    //   },
-    //   geometry: {
-    //     type: "LineString",
-    //     coordinates: coords,
-    //   },
-    // };
 
     const newFeatures = this.map.getSource("lines")["_data"].features;
     newFeatures.push(newLine);
@@ -225,19 +216,19 @@ class Map extends React.Component {
     currentMarkersInfo[nodeIndex] = new_node;
     this.setState({ markersDetailInfo: currentMarkersInfo });
 
-    console.log("the current markers info is");
-    console.log(this.state.markersDetailInfo);
+    // console.log("the current markers info is");
+    // console.log(this.state.markersDetailInfo);
 
     const existingMakerInOrder = this.state.orderedMarkerIds;
     existingMakerInOrder.push(this.state.numMarkers);
     this.setState({ orderedMarkerIds: existingMakerInOrder });
     this.setState({ numMarkers: this.state.numMarkers + 1 });
 
-    console.log("the marker ids are updated");
-    console.log("current marker ids are");
-    console.log(this.state.orderedMarkerIds);
-    console.log("the node Index increased to");
-    console.log(this.state.numMarkers);
+    // console.log("the marker ids are updated");
+    // console.log("current marker ids are");
+    // console.log(this.state.orderedMarkerIds);
+    // console.log("the node Index increased to");
+    // console.log(this.state.numMarkers);
 
     let html_element = new_node.getElement();
     html_element.addEventListener("click", () => {
@@ -257,7 +248,7 @@ class Map extends React.Component {
       //Second insert call has been made and start_node coords !== end_node coords
       const newPaths = this.state.paths;
       newPaths.push(obj);
-      console.log(newPaths);
+      // console.log(newPaths);
       this.setState(
         { paths: newPaths },
         this.drawPath(this.state.paths.length - 1)
@@ -283,8 +274,8 @@ class Map extends React.Component {
           return;
         }
         response.json().then((data) => {
-          console.log("Retrieved insertNode data is:");
-          console.log(data);
+          // console.log("Retrieved insertNode data is:");
+          // console.log(data);
           this.addMarker(data[index], index);
         });
       })
@@ -294,6 +285,7 @@ class Map extends React.Component {
   }
 
   deleteFromRoute(route, index) {
+    console.log(`deleteFromRoute route: ${route} index: ${index}`);
     const body = {
       index,
       route,
@@ -328,9 +320,15 @@ class Map extends React.Component {
     let to_change = index;
     let j = 0;
     for (let i = 0; i < this.state.paths.length; i++) {
-      console.log(new_paths[i]);
+      // console.log(new_paths[i]);
       if (i === to_change - 1) {
-        console.log(data[to_change]);
+        // console.log("data");
+        // console.log(data);
+        // console.log(to_change)
+        // console.log(data[to_change])
+
+        console.log("Updated marker info");
+
         new_paths[i].end_node = data[to_change].end_node;
       }
       if (i === to_change) {
