@@ -257,6 +257,7 @@ class Map extends React.Component {
   }
 
   addToRoute(lngLat, route, index) {
+    console.log(lngLat, route, index);
     const { lng, lat } = lngLat;
     const body = {
       index,
@@ -309,41 +310,28 @@ class Map extends React.Component {
         console.log("Fetch error " + error);
       });
   }
-
   removeMarker(data, index) {
-    let new_paths = this.state.paths;
+    let new_paths = [];
+    Object.assign(new_paths, this.state.paths);
     if (new_paths.length == 0) {
       return;
     }
     this.removePath(index);
     new_paths.splice(index, 1);
-    let to_change = index;
-    let j = 0;
-    for (let i = 0; i < this.state.paths.length; i++) {
-      // console.log(new_paths[i]);
-      if (i === to_change - 1) {
-        // console.log("data");
-        // console.log(data);
-        // console.log(to_change)
-        // console.log(data[to_change])
-
-        console.log("Updated marker info");
-
-        new_paths[i].end_node = data[to_change].end_node;
+    for (const [idx, value] of Object.entries(data)) {
+      console.log(idx);
+      console.log(value);
+      this.removePath(idx);
+      new_paths[idx] = value;
+      this.setState({ paths: new_paths });
+      if (new_paths.length == 0) {
+        return;
       }
-      if (i === to_change) {
-        this.removePath(i);
-        new_paths[i].start_node = data[to_change].start_node;
-        new_paths[i].coordinates = data[to_change].coordinates;
-        j = i;
-        break;
-      }
+      this.drawPath(idx);
     }
-    this.setState({ paths: new_paths });
-    if (new_paths.length == 0) {
-      return;
-    }
-    this.drawPath(j);
+    this.setState({
+      paths: new_paths.slice(0, index).concat(new_paths.slice(index + 1, -1)),
+    });
   }
 
   modifyRoute(lngLat, route, index) {
