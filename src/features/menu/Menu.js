@@ -115,7 +115,8 @@ export default class Menu extends Component {
                         "route": 0,
                         "date_range": [this.state.selectedStartDate, this.state.selectedEndDate],
                         "days_of_week": this.state.selectedDaysofWeek,
-                        "hour_range": [Number(this.state.selectedStartHour), Number(this.state.selectedEndHour)]
+                        "hour_range": [Number(this.state.selectedStartHour), Number(this.state.selectedEndHour)],
+                        "selections" :[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] // 12 return values
                       })
                     }).then((response) => {
                       if (response.status !== 200) {
