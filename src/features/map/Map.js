@@ -148,7 +148,6 @@ class Map extends React.Component {
 
   removePath = (index) => {
     const data = this.state.paths[index];
-    // debugger;
     const coords = data.coordinates;
     const newLine = {
       type: "Feature",
@@ -212,9 +211,6 @@ class Map extends React.Component {
       ...this.map.getSource("lines")["_data"],
       newFeatures,
     });
-    // this.setState({
-    //   isBuildingPath: false,
-    // });
   };
 
   addPopup(nodeIndex) {
@@ -261,7 +257,6 @@ class Map extends React.Component {
       console.log(this.state.markerDeletionWindowOpen);
     });
 
-    // ここな気がする。
     if (!this.state.isBuildingPath) {
       //First insert_node call has been made: start_node coords == end_node coords
       const newPaths = this.state.paths;
