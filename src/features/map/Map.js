@@ -131,33 +131,36 @@ class Map extends React.Component {
       if (e.originalEvent.button === 0) {
         // wait until the the state.markerDeletionWindowOpen is updated when marker it self is been clicked
         // the state.markerDeletionWindowOpen is updated at
-        setTimeout(() => {
-          // console.log("the marker itself has been clicked is");
-          console.log(this.state.markerDeletionWindowOpen);
-          if (this.state.markerDeletionWindowOpen === false) {
-            this.addToRoute(
-              e.lngLat,
-              this.state.route_index,
-              this.state.paths.length
-            );
-          }
-        }, 1200);
+        // console.log("the marker itself has been clicked is");
+        console.log(this.state.markerDeletionWindowOpen);
+        if (this.state.markerDeletionWindowOpen === false) {
+          this.addToRoute(
+            e.lngLat,
+            this.state.route_index,
+            this.state.paths.length
+          );
+        }
       }
     });
   }
 
   removePath = (index) => {
     const data = this.state.paths[index];
+
+    const { lng: end_lng, lat: end_lat } = data.end_node;
     const coords = data.coordinates;
     const newFeatures = this.map.getSource("lines")["_data"].features;
 
     //Iterating in reverse so that modifying newFeatures while looping works
-    for (let i = newFeatures.length - 1; i >= 0; i--) {
-      const featObjCoords = newFeatures[i]["geometry"]["coordinates"];
-      if (isEqual(featObjCoords, coords)) {
-        if (i + 1 < newFeatures.length) {
-          newFeatures.splice(i, 2);
-        } else {
+    if (index == 0) {
+      newFeatures.splice(0, 1);
+    } else {
+      for (let i = newFeatures.length - 1; i >= 0; i--) {
+        const featObjCoords = newFeatures[i]["geometry"]["coordinates"];
+        if (
+          isEqual(coords, featObjCoords) ||
+          (end_lng === featObjCoords[0][0] && end_lat === featObjCoords[0][1])
+        ) {
           newFeatures.splice(i, 1);
         }
       }

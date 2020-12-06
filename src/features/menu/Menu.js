@@ -14,10 +14,10 @@ export default class Menu extends Component {
   constructor() {
     super();
     this.state = {
-      menuOpen: false,
+      menuOpen: true,
       selectedDaysofWeek:[],
-      selectedStartHour: undefined, // format rn: '7' not '07:00'
-      selectedEndHour: undefined, // format rn: '7' not '07:00',
+      selectedStartHour: undefined,
+      selectedEndHour: undefined,
       selectedStartDate: undefined, //eg "2018-09-01"
       selectedEndDate: undefined //eg "2018-09-07"
     };
@@ -89,51 +89,63 @@ export default class Menu extends Component {
               <DaysOfWeek selectedDays={this.state.selectedDaysofWeek} updateSelectedDays={this.updateSelectedDays}/>
               <div>
                 <RangeSelect
-                  title="Hour Range"
+                  title="Hour Range (0-23)"
                   startVal={this.state.selectedStartHour}
                   endVal={this.state.selectedEndHour}
                   onStartValChange={this.updateSelectedStartHour}
                   onEndValChange={this.updateSelectedEndHour}
+                  upperBoundInclusive
                 />
                 <RangeSelect
-                  title="Date Range"
+                  title="Date Range (YYYY-MM-DD)"
                   startVal={this.state.selectedStartDate}
                   onStartValChange={this.updateSelectedStartDate}
                   endVal={this.state.selectedEndDate}
                   onEndValChange={this.updateSelectedEndDate}
+                  upperBoundInclusive
                 />
               </div>
               <div>
-                <SelectReturnValues />
-                <MenuButton name="Download as CSV" onClick={() => {
-                  fetch(`${ENDPOINT}/api/getTrafficData`, {
-                    method: "POST",
-                    body: JSON.stringify({
-                      "route": 0,
-                      "date_range": [this.state.selectedStartDate, this.state.selectedEndDate],
-                      "days_of_week": this.state.selectedDaysofWeek,
-                      "hour_range": [Number(this.state.selectedStartHour), Number(this.state.selectedEndHour)]
+                {/* hide select return values button and modal until integration for custom return values is implemented*/}
+                {/* will download all return values by default*/}
+                {/* <SelectReturnValues /> */}
+                <>
+                  <MenuButton name="Download as CSV" onClick={() => {
+                    fetch(`${ENDPOINT}/api/getTrafficData`, {
+                      method: "POST",
+                      body: JSON.stringify({
+                        "route": 0,
+                        "date_range": [this.state.selectedStartDate, this.state.selectedEndDate],
+                        "days_of_week": this.state.selectedDaysofWeek,
+                        "hour_range": [Number(this.state.selectedStartHour), Number(this.state.selectedEndHour)],
+                        "selections" :[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] // 12 return values
+                      })
+                    }).then((response) => {
+                      if (response.status !== 200) {
+                        console.log("There was a problem, Status code: " + response.status)
+                        return
+                      } else {
+                        return response.blob()
+                      }
+                    }).then((blob) => {
+                      const url = window.URL.createObjectURL(new Blob([blob]));
+                      const link = document.createElement('a');
+                      link.href = url;
+                      link.setAttribute('download', 'data.csv');
+                      document.body.appendChild(link);
+                      link.click();
+                      link.parentNode.removeChild(link);
+                    }).catch((error) => {
+                      console.log("Fetch error " + error)
                     })
-                  }).then((response) => {
-                    if (response.status !== 200) {
-                      console.log("There was a problem, Status code: " + response.status)
-                      return
-                    } else {
-                      return response.blob()
-                    }
-                  }).then((blob) => {
-                    const url = window.URL.createObjectURL(new Blob([blob]));
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.setAttribute('download', 'data.csv');
-                    document.body.appendChild(link);
-                    link.click();
-                    link.parentNode.removeChild(link);
-                  }).catch((error) => {
-                    console.log("Fetch error " + error)
-                  })
-                }
-                }/>
+                  }
+                  }/>
+                  <p style={{margin:'0px', textAlign:'center'}}>
+                    For data download:
+                    <li>A segment must be drawn on the map</li>
+                    <li>All fields in the form must be filled in</li>
+                  </p>                
+              </>
               </div>
             </div>
           </div>
