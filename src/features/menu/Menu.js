@@ -15,7 +15,7 @@ export default class Menu extends Component {
     super();
     this.state = {
       menuOpen: true,
-      selectedDaysofWeek:[],
+      selectedDaysofWeek: [],
       selectedStartHour: undefined,
       selectedEndHour: undefined,
       selectedStartDate: undefined, //eg "2018-09-01"
@@ -30,40 +30,40 @@ export default class Menu extends Component {
   };
 
   updateSelectedDays = (dayToChange) => {
-    const {selectedDaysofWeek}  = this.state
+    const { selectedDaysofWeek } = this.state
     let newSelectedDays
 
-    if(selectedDaysofWeek.includes(dayToChange)){
-      newSelectedDays = selectedDaysofWeek.filter(function(day) {
+    if (selectedDaysofWeek.includes(dayToChange)) {
+      newSelectedDays = selectedDaysofWeek.filter(function (day) {
         return day !== dayToChange
       })
     }
-    else{
+    else {
       newSelectedDays = [...selectedDaysofWeek]
       newSelectedDays.push(dayToChange)
-      
+
     }
     this.setState({
       selectedDaysofWeek: newSelectedDays,
     });
   }
 
-  updateSelectedStartHour = (newStartHour)=>{
-    this.setState({selectedStartHour:newStartHour})
+  updateSelectedStartHour = (newStartHour) => {
+    this.setState({ selectedStartHour: newStartHour })
   }
 
-  updateSelectedEndHour = (newEndHour)=>{
-    this.setState({selectedEndHour:newEndHour})
+  updateSelectedEndHour = (newEndHour) => {
+    this.setState({ selectedEndHour: newEndHour })
   }
 
-  updateSelectedStartDate = (newStartDate)=>{
-    this.setState({selectedStartDate:newStartDate})
+  updateSelectedStartDate = (newStartDate) => {
+    this.setState({ selectedStartDate: newStartDate })
   }
 
-  updateSelectedEndDate = (newEndDate)=>{
-    this.setState({selectedEndDate:newEndDate})
+  updateSelectedEndDate = (newEndDate) => {
+    this.setState({ selectedEndDate: newEndDate })
   }
-  
+
 
   render() {
     return (
@@ -86,7 +86,7 @@ export default class Menu extends Component {
           <div className={styles.sideBar}></div>
           <div className={styles.menu}>
             <div className={styles.menuSelect}>
-              <DaysOfWeek selectedDays={this.state.selectedDaysofWeek} updateSelectedDays={this.updateSelectedDays}/>
+              <DaysOfWeek selectedDays={this.state.selectedDaysofWeek} updateSelectedDays={this.updateSelectedDays} />
               <div>
                 <RangeSelect
                   title="Hour Range (0-23)"
@@ -118,7 +118,7 @@ export default class Menu extends Component {
                         "date_range": [this.state.selectedStartDate, this.state.selectedEndDate],
                         "days_of_week": this.state.selectedDaysofWeek,
                         "hour_range": [Number(this.state.selectedStartHour), Number(this.state.selectedEndHour)],
-                        "selections" :[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] // 12 return values
+                        "selections": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] // 16 return values
                       })
                     }).then((response) => {
                       if (response.status !== 200) {
@@ -139,13 +139,13 @@ export default class Menu extends Component {
                       console.log("Fetch error " + error)
                     })
                   }
-                  }/>
-                  <p style={{margin:'0px', textAlign:'center'}}>
+                  } />
+                  <p style={{ margin: '0px', textAlign: 'center' }}>
                     For data download:
                     <li>A segment must be drawn on the map</li>
                     <li>All fields in the form must be filled in</li>
-                  </p>                
-              </>
+                  </p>
+                </>
               </div>
             </div>
           </div>
