@@ -6,6 +6,7 @@ import Menu from "../menu/Menu";
 import { ENDPOINT } from "./../requests";
 import ReactDOM from "react-dom";
 import styles from "./Map.module.css";
+import { isEqual } from "lodash";
 
 mapboxgl.accessToken = getMapboxToken();
 
@@ -156,10 +157,30 @@ class Map extends React.Component {
         coordinates: coords,
       },
     };
-    const newFeatures = this.map.getSource("lines")["_data"].features;
-    newFeatures.push(newLine);
-    // console.log(index);
+    console.log("coords", coords);
 
+    const newFeatures = this.map.getSource("lines")["_data"].features;
+    let copyFeatures = [];
+    // console.log("features", newFeatures, "index", index);
+
+    for (let i = newFeatures.length - 1; i >= 0; i--) {
+      // console.log("feature i", newFeatures[i]);
+      const featObjCoords = newFeatures[i]["geometry"]["coordinates"];
+      console.log("featureObj coords", featObjCoords);
+      if (isEqual(featObjCoords, coords)) {
+        if (i + 1 < newFeatures.length) {
+          newFeatures.splice(i, 2);
+        } else {
+          newFeatures.splice(i, 1);
+        }
+      }
+    }
+    // console.log("changed features", newFeatures);
+    // newFeatures.push(newLine);
+
+    // newFeatures.splice(index, 1);
+
+    // console.log("features", newFeatures, "index", index);
     this.map.getSource("lines").setData({
       ...this.map.getSource("lines")["_data"],
       newFeatures,
@@ -286,7 +307,7 @@ class Map extends React.Component {
   }
 
   deleteFromRoute(route, index) {
-    console.log(`deleteFromRoute route: ${route} index: ${index}`);
+    // console.log(`deleteFromRoute route: ${route} index: ${index}`);
     const body = {
       index,
       route,
