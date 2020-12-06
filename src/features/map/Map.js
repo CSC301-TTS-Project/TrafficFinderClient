@@ -82,7 +82,7 @@ class Map extends React.Component {
       zoom: this.state.zoom,
     });
 
-    this.map.doubleClickZoom.disable()
+    this.map.doubleClickZoom.disable();
 
     // add line/segment
     this.map.on("load", () => {
@@ -149,26 +149,11 @@ class Map extends React.Component {
   removePath = (index) => {
     const data = this.state.paths[index];
     const coords = data.coordinates;
-    const newLine = {
-      type: "Feature",
-      properties: {
-        color: "#000000",
-      },
-      geometry: {
-        type: "LineString",
-        coordinates: coords,
-      },
-    };
-    console.log("coords", coords);
-
     const newFeatures = this.map.getSource("lines")["_data"].features;
-    let copyFeatures = [];
-    // console.log("features", newFeatures, "index", index);
 
+    //Iterating in reverse so that modifying newFeatures while looping works
     for (let i = newFeatures.length - 1; i >= 0; i--) {
-      // console.log("feature i", newFeatures[i]);
       const featObjCoords = newFeatures[i]["geometry"]["coordinates"];
-      console.log("featureObj coords", featObjCoords);
       if (isEqual(featObjCoords, coords)) {
         if (i + 1 < newFeatures.length) {
           newFeatures.splice(i, 2);
@@ -177,12 +162,6 @@ class Map extends React.Component {
         }
       }
     }
-    // console.log("changed features", newFeatures);
-    // newFeatures.push(newLine);
-
-    // newFeatures.splice(index, 1);
-
-    // console.log("features", newFeatures, "index", index);
     this.map.getSource("lines").setData({
       ...this.map.getSource("lines")["_data"],
       newFeatures,
@@ -350,7 +329,7 @@ class Map extends React.Component {
       this.drawPath(idx);
     }
     this.setState({
-      paths: new_paths
+      paths: new_paths,
     });
   }
 
