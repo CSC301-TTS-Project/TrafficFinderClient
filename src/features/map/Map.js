@@ -82,6 +82,8 @@ class Map extends React.Component {
       zoom: this.state.zoom,
     });
 
+    this.map.doubleClickZoom.disable()
+
     // add line/segment
     this.map.on("load", () => {
       this.map.addSource("lines", {
@@ -125,7 +127,7 @@ class Map extends React.Component {
         });
     });
 
-    this.map.on("mousedown", (e) => {
+    this.map.on("dblclick", (e) => {
       if (e.originalEvent.button === 0) {
         // wait until the the state.markerDeletionWindowOpen is updated when marker it self is been clicked
         // the state.markerDeletionWindowOpen is updated at
