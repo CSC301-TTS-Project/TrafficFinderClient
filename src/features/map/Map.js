@@ -142,7 +142,7 @@ class Map extends React.Component {
     });
   }
 
-  removePath = (index, paths) => {
+  removePath = (index, paths, matchExact=false) => {
     const data = paths[index];
 
     console.log("Remove path " + index)
@@ -168,7 +168,7 @@ class Map extends React.Component {
         }
       } else if (
         isEqual(new Set(featObjCoords), new Set(coords)) ||
-        (end_lng === featObjCoords[0][0] && end_lat === featObjCoords[0][1])
+        (end_lng === featObjCoords[0][0] && end_lat === featObjCoords[0][1] && !matchExact)
       ) {
         newFeatures.splice(i, 1);
         spliceCount++;
@@ -363,7 +363,7 @@ class Map extends React.Component {
           for (let [idx, value] of Object.entries(data["segment_updates"])) {
             if (parseInt(idx) > 0) {
               console.log("Removing path: " + idx)
-              this.removePath(idx, new_paths);
+              this.removePath(idx, new_paths, true);
               new_paths[idx] = value;
             }
           }
