@@ -7,6 +7,7 @@ import { ENDPOINT } from "./../requests";
 import ReactDOM from "react-dom";
 import styles from "./Map.module.css";
 import { isEqual } from "lodash";
+import SelectInput from "@material-ui/core/Select/SelectInput";
 
 mapboxgl.accessToken = getMapboxToken();
 
@@ -144,32 +145,45 @@ class Map extends React.Component {
   removePath = (index, paths) => {
     const data = paths[index];
 
+    console.log("Remove path " + index)
+
     const { lng: end_lng, lat: end_lat } = data.end_node;
     const coords = data.coordinates;
-    const newFeatures = this.map.getSource("lines")["_data"].features;
+    console.log("Initial Map data: ")
+    const sourceData = this.map.getSource("lines")["_data"];
+    console.log(sourceData);
+    let newFeatures = [...this.map.getSource("lines")["_data"].features];
     //Iterating in reverse so that modifying newFeatures while looping works
 
+    console.log("Pruning for: ");
+    console.log(data)
+
+    let spliceCount = 0;
     for (let i = newFeatures.length - 1; i >= 0; i--) {
-      const featObjCoords = newFeatures[i]["geometry"]["coordinates"];
+      let featObjCoords = newFeatures[i]["geometry"]["coordinates"];
       if (featObjCoords.length === 0) {
         if (index === 0) {
           newFeatures.splice(i, 1);
+          spliceCount++;
         }
       } else if (
-        isEqual(coords, featObjCoords) ||
+        isEqual(new Set(featObjCoords), new Set(coords)) ||
         (end_lng === featObjCoords[0][0] && end_lat === featObjCoords[0][1])
       ) {
         newFeatures.splice(i, 1);
+        spliceCount++;
       }
     }
+    console.log("SpliceCount: " + spliceCount);
     this.map.getSource("lines").setData({
-      ...this.map.getSource("lines")["_data"],
-      newFeatures,
+      ...sourceData,
+      features: newFeatures,
     });
+    console.log("Final Remove Map Data: ")
+    console.log(this.map.getSource("lines")["_data"]);
   };
 
   drawPath = (index, paths) => {
-    console.log(paths)
     const data = paths[index];
     const coords = data.coordinates;
     const newLine = {
@@ -184,16 +198,17 @@ class Map extends React.Component {
       },
     };
 
-    const newFeatures = this.map.getSource("lines")["_data"].features;
+    const sourceData = this.map.getSource("lines")["_data"];
+    let newFeatures = [...sourceData.features];
     newFeatures.push(newLine);
 
-    console.log("New Features: ")
-    console.log(newFeatures);
-
     this.map.getSource("lines").setData({
-      ...this.map.getSource("lines")["_data"],
-      newFeatures,
+      ...sourceData,
+      features: newFeatures,
     });
+
+    console.log("Final Draw Map Data: ")
+    console.log(this.map.getSource("lines")["_data"]);
   };
 
   addPopup(nodeIndex) {
@@ -241,8 +256,7 @@ class Map extends React.Component {
       //First insert_node call has been made: start_node coords == end_node coords
       const newPaths = this.state.paths;
       newPaths.push(obj);
-      this.setState({ paths: newPaths });
-      this.setState({ isBuildingPath: true });
+      this.setState({ paths: newPaths, isBuildingPath: true });
     } else if (this.state.isBuildingPath) {
       //Second insert call has been made and start_node coords !== end_node coords
       const newPaths = this.state.paths;
@@ -307,7 +321,7 @@ class Map extends React.Component {
   removeMarker(data, index) {
     let new_paths = [];
     Object.assign(new_paths, this.state.paths);
-    if (new_paths.length == 0) {
+    if (new_paths.length === 0) {
       return;
     }
     this.removePath(index, this.state.paths);
@@ -316,7 +330,7 @@ class Map extends React.Component {
       this.removePath(idx, this.state.paths);
       new_paths[idx] = value;
       this.setState({ paths: new_paths });
-      if (new_paths.length == 0) {
+      if (new_paths.length === 0) {
         return;
       }
       this.drawPath(idx, this.state.paths);
@@ -344,16 +358,22 @@ class Map extends React.Component {
           return;
         }
         response.json().then((data) => {
-          for (const [idx, value] of Object.entries(data["segment_updates"])) {
-              this.setState((state) => {
-                let new_paths = [...state.paths];
-                this.removePath(idx, new_paths);
-                new_paths[idx] = value;
-                this.drawPath(idx, new_paths);
-                return {...state, paths: new_paths}
-              });
+          console.log(data);
+          let new_paths = JSON.parse(JSON.stringify(this.state.paths));
+          for (let [idx, value] of Object.entries(data["segment_updates"])) {
+            if (parseInt(idx) > 0) {
+              console.log("Removing path: " + idx)
+              this.removePath(idx, new_paths);
+              new_paths[idx] = value;
+            }
+          }
+          for (let [idx, value] of Object.entries(data["segment_updates"])) {
+            if (parseInt(idx) > 0) {
+              this.drawPath(idx, new_paths);
+            }
           }
           markerCoordsCallback(data["new_node"].lng, data["new_node"].lat);
+          this.setState({ paths: new_paths });
         });
       })
       .catch((error) => {
