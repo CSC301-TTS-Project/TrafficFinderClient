@@ -27,6 +27,21 @@ class Map extends React.Component {
     };
   }
 
+  findMarkerIndex = (markerId) => {
+    let deletionIndex = -1;
+    for (
+      let index = 0;
+      index < this.state.orderedMarkerIds.length;
+      index++
+    ) {
+      if (markerId === this.state.orderedMarkerIds[index]) {
+        deletionIndex = index;
+        break;
+      }
+    }
+    return deletionIndex
+  }
+
   markerDeletionWindow = (markerId) => (
     <div className={styles.popUpContents}>
       <h3>Are you sure you want to delete the marker?</h3>
@@ -35,28 +50,12 @@ class Map extends React.Component {
           className={styles.primaryBtn}
           onClick={() => {
             const marker = this.state.markersDetailInfo[markerId];
-            console.log("marker id");
-            console.log(markerId);
-            console.log("marker info");
-            console.log(this.state.markersDetailInfo);
 
             marker.remove();
 
             // find the index of the deletion marker in the path
-            let deletionIndex = -1;
-            for (
-              let index = 0;
-              index < this.state.orderedMarkerIds.length;
-              index++
-            ) {
-              if (markerId === this.state.orderedMarkerIds[index]) {
-                deletionIndex = index;
-                break;
-              }
-            }
+            let deletionIndex = this.findMarkerIndex(markerId)
             const routeId = 0;
-            // console.log("the deletion index is ");
-            // console.log(deletionIndex);
             this.deleteFromRoute(routeId, deletionIndex);
 
             // After successfully deleted marker, we remove the deleted marker id from
@@ -142,14 +141,12 @@ class Map extends React.Component {
     });
   }
 
-  removePath = (index) => {
-    const data = this.state.paths[index];
+  removePath = (index, paths) => {
+    const data = paths[index];
 
     const { lng: end_lng, lat: end_lat } = data.end_node;
     const coords = data.coordinates;
     const newFeatures = this.map.getSource("lines")["_data"].features;
-    console.log(data);
-    console.log("newFeatures", newFeatures);
     //Iterating in reverse so that modifying newFeatures while looping works
 
     for (let i = newFeatures.length - 1; i >= 0; i--) {
@@ -171,8 +168,9 @@ class Map extends React.Component {
     });
   };
 
-  drawPath = (index) => {
-    const data = this.state.paths[index];
+  drawPath = (index, paths) => {
+    console.log(paths)
+    const data = paths[index];
     const coords = data.coordinates;
     const newLine = {
       type: "Feature",
@@ -188,6 +186,9 @@ class Map extends React.Component {
 
     const newFeatures = this.map.getSource("lines")["_data"].features;
     newFeatures.push(newLine);
+
+    console.log("New Features: ")
+    console.log(newFeatures);
 
     this.map.getSource("lines").setData({
       ...this.map.getSource("lines")["_data"],
@@ -212,31 +213,28 @@ class Map extends React.Component {
     let new_node = new mapboxgl.Marker()
       .setLngLat([lng, lat])
       .setPopup(this.addPopup(nodeIndex))
+      .setDraggable(true)
       .addTo(this.map);
 
     const currentMarkersInfo = this.state.markersDetailInfo;
     currentMarkersInfo[nodeIndex] = new_node;
     this.setState({ markersDetailInfo: currentMarkersInfo });
 
-    // console.log("the current markers info is");
-    // console.log(this.state.markersDetailInfo);
-
     const existingMakerInOrder = this.state.orderedMarkerIds;
     existingMakerInOrder.push(this.state.numMarkers);
     this.setState({ orderedMarkerIds: existingMakerInOrder });
     this.setState({ numMarkers: this.state.numMarkers + 1 });
 
-    // console.log("the marker ids are updated");
-    // console.log("current marker ids are");
-    // console.log(this.state.orderedMarkerIds);
-    // console.log("the node Index increased to");
-    // console.log(this.state.numMarkers);
-
     let html_element = new_node.getElement();
     html_element.addEventListener("click", () => {
       this.setState({ markerDeletionWindowOpen: true });
-      console.log("markder deletion window open`");
-      console.log(this.state.markerDeletionWindowOpen);
+      console.log(nodeIndex);
+    });
+
+    new_node.on('dragend', () => {
+      this.modifyRoute(new_node.getLngLat(), 0, this.findMarkerIndex(nodeIndex), (lng, lat) => {
+        new_node.setLngLat([lng, lat])
+      })
     });
 
     if (!this.state.isBuildingPath) {
@@ -245,15 +243,13 @@ class Map extends React.Component {
       newPaths.push(obj);
       this.setState({ paths: newPaths });
       this.setState({ isBuildingPath: true });
-      console.log("Ran as first node");
     } else if (this.state.isBuildingPath) {
       //Second insert call has been made and start_node coords !== end_node coords
       const newPaths = this.state.paths;
       newPaths.push(obj);
-      // console.log(newPaths);
       this.setState(
         { paths: newPaths },
-        this.drawPath(this.state.paths.length - 1)
+        this.drawPath(this.state.paths.length - 1, this.state.paths)
       );
     }
   }
@@ -277,8 +273,6 @@ class Map extends React.Component {
           return;
         }
         response.json().then((data) => {
-          // console.log("Retrieved insertNode data is:");
-          // console.log(data);
           this.addMarker(data[index], index);
         });
       })
@@ -288,7 +282,6 @@ class Map extends React.Component {
   }
 
   deleteFromRoute(route, index) {
-    // console.log(`deleteFromRoute route: ${route} index: ${index}`);
     const body = {
       index,
       route,
@@ -303,8 +296,6 @@ class Map extends React.Component {
           return;
         }
         response.json().then((data) => {
-          console.log("Retrieved Delete Node data is:");
-          console.log(data);
           this.removeMarker(data, index);
         });
       })
@@ -312,31 +303,30 @@ class Map extends React.Component {
         console.log("Fetch error " + error);
       });
   }
+
   removeMarker(data, index) {
     let new_paths = [];
     Object.assign(new_paths, this.state.paths);
     if (new_paths.length == 0) {
       return;
     }
-    this.removePath(index);
+    this.removePath(index, this.state.paths);
     new_paths.splice(index, 1);
     for (const [idx, value] of Object.entries(data)) {
-      console.log(idx);
-      console.log(value);
-      this.removePath(idx);
+      this.removePath(idx, this.state.paths);
       new_paths[idx] = value;
       this.setState({ paths: new_paths });
       if (new_paths.length == 0) {
         return;
       }
-      this.drawPath(idx);
+      this.drawPath(idx, this.state.paths);
     }
     this.setState({
       paths: new_paths,
     });
   }
 
-  modifyRoute(lngLat, route, index) {
+  modifyRoute(lngLat, route, index, markerCoordsCallback) {
     const { lng, lat } = lngLat;
     const body = {
       index,
@@ -354,9 +344,16 @@ class Map extends React.Component {
           return;
         }
         response.json().then((data) => {
-          console.log(JSON.parse(data));
-          // removeMarker()
-          // addMarker()
+          for (const [idx, value] of Object.entries(data["segment_updates"])) {
+              this.setState((state) => {
+                let new_paths = [...state.paths];
+                this.removePath(idx, new_paths);
+                new_paths[idx] = value;
+                this.drawPath(idx, new_paths);
+                return {...state, paths: new_paths}
+              });
+          }
+          markerCoordsCallback(data["new_node"].lng, data["new_node"].lat);
         });
       })
       .catch((error) => {
