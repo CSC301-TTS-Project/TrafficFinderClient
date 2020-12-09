@@ -64,6 +64,10 @@ export default function TransitionsModal(props) {
   const [open, setOpen] = React.useState(false);
   // const [checkedItems, setCheckedItems] = React.useState({});
 
+  const {selectedReturnValues} = props
+  console.log("getting selected return values", selectedReturnValues)
+
+
   const handleChange = (e) => {
     // setCheckedItems({
     //   ...checkedItems,
@@ -92,7 +96,6 @@ export default function TransitionsModal(props) {
     setOpen(false);
   };
 
-  console.log("getting selected return values", props.selectedReturnValues)
   return (
     <div className={styles.menuBtnContainer}>
       <button className={styles.menuBtn} onClick={handleOpen}>
@@ -123,7 +126,7 @@ export default function TransitionsModal(props) {
                         id={index}
                         value={item}
                         onChange={handleChange}
-                        // checked={checkedItems[item.id]}
+                        checked={selectedReturnValues[index] === 1}
                         title={item}
                       />
                     </label>

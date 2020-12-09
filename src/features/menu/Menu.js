@@ -20,7 +20,7 @@ export default class Menu extends Component {
       selectedEndHour: undefined,
       selectedStartDate: undefined, //eg "2018-09-01"
       selectedEndDate: undefined, //eg "2018-09-07",
-      selectedReturnValues: []
+      selectedReturnValues: [0, 0 , 0 , 0 , 0 , 0, 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ] //16 values
     };
   }
 
