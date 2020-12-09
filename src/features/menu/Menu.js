@@ -47,12 +47,27 @@ export default class Menu extends Component {
     });
   };
 
-  updateSelectedStartHour = (newStartHour) => {
-    this.setState({ selectedStartHour: newStartHour });
+  updateSelectedStartHour = (e) => {
+    const newStartHour = e.target.value;
+
+    if (newStartHour < 0) {
+      this.setState({ selectedStartHour: 0 });
+    } else if (newStartHour > 23) {
+      this.setState({ selectedStartHour: 23 });
+    } else {
+      this.setState({ selectedStartHour: newStartHour });
+    }
   };
 
-  updateSelectedEndHour = (newEndHour) => {
-    this.setState({ selectedEndHour: newEndHour });
+  updateSelectedEndHour = (e) => {
+    const newEndHour = e.target.value;
+    if (newEndHour < 0) {
+      this.setState({ selectedEndHour: 0 });
+    } else if (newEndHour > 23) {
+      this.setState({ selectedEndHour: 23 });
+    } else {
+      this.setState({ selectedEndHour: newEndHour });
+    }
   };
 
   handleStartDate = (newStartDate) => {
@@ -93,8 +108,8 @@ export default class Menu extends Component {
                   title="Hour Range (0-23)"
                   startVal={this.state.selectedStartHour}
                   endVal={this.state.selectedEndHour}
-                  onStartValChange={this.updateSelectedStartHour}
-                  onEndValChange={this.updateSelectedEndHour}
+                  handleStartTimeChange={this.updateSelectedStartHour}
+                  handleEndTimeChange={this.updateSelectedEndHour}
                 />
                 <DateSelect
                   handleStartDate={this.handleStartDate}
