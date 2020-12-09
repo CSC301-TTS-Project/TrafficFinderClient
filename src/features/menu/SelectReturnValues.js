@@ -30,7 +30,7 @@ const checkLists = [
 const CheckBox = ({ id, value, checked, onChange, title }) => {
   return (
     <div>
-      <Checkbox checked={checked} color="default" />
+      <Checkbox checked={checked} color="default" onChange={onChange} />
       {/* <input
         className={}
         id={id}
@@ -64,11 +64,15 @@ export default function TransitionsModal(props) {
   const [open, setOpen] = React.useState(false);
   // const [checkedItems, setCheckedItems] = React.useState({});
 
-  const {selectedReturnValues} = props
+  const {selectedReturnValues, onSelectedValuesChange} = props
   console.log("getting selected return values", selectedReturnValues)
 
 
   const handleChange = (e) => {
+
+    // const {onSelectedValuesChange} = props
+    // onSelectedValuesChange(index)
+
     // setCheckedItems({
     //   ...checkedItems,
     //   [e.target.id]: e.target.checked,
@@ -125,7 +129,7 @@ export default function TransitionsModal(props) {
                       <CheckBox
                         id={index}
                         value={item}
-                        onChange={handleChange}
+                        onChange={()=>onSelectedValuesChange(index)}
                         checked={selectedReturnValues[index] === 1}
                         title={item}
                       />

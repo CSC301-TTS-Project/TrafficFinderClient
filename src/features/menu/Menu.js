@@ -20,7 +20,12 @@ export default class Menu extends Component {
       selectedEndHour: undefined,
       selectedStartDate: undefined, //eg "2018-09-01"
       selectedEndDate: undefined, //eg "2018-09-07",
-      selectedReturnValues: Array.from({length: 16}, () => 1)
+
+      // selected return values in this order:
+      // “route_num,num_days,link_obs,min_speed,mean_speed,max_speed,
+      // pct_50_speed,pct_85_speed,std_dev_speed,min_tt,mean_tt,max_tt,
+      // std_dev_tt,total_length,full_link_obs”
+      selectedReturnValues: Array.from({length: 16}, () => 1)  //all selected by default
     };
   }
 
@@ -63,6 +68,28 @@ export default class Menu extends Component {
 
   updateSelectedEndDate = (newEndDate) => {
     this.setState({ selectedEndDate: newEndDate })
+  }
+
+  updateSelectedReturnValues = (index) => {
+    const {selectedReturnValues} = this.state
+    let newSelectedReturnValues
+
+    console.log("index of value", index)
+    // if 1->0
+    // if (selectedReturnValues[index]=== 1) {
+    //   // newSelectedDays = selectedDaysofWeek.filter(function (day) {
+    //   //   return day !== dayToChange
+    //   // })
+    // }
+    // // if 0->1
+    // else {
+    //   newSelectedDays = [...selectedDaysofWeek]
+    //   newSelectedDays.push(dayToChange)
+
+    // }
+    // this.setState({
+    //   selectedReturnValues: newSelectedReturnValues,
+    // });
   }
 
 
@@ -109,7 +136,10 @@ export default class Menu extends Component {
               <div>
                 {/* hide select return values button and modal until integration for custom return values is implemented*/}
                 {/* will download all return values by default*/}
-                <SelectReturnValues selectedReturnValues={this.state.selectedReturnValues}/>
+                <SelectReturnValues 
+                  selectedReturnValues={this.state.selectedReturnValues}
+                  onSelectedValuesChange={this.updateSelectedReturnValues}
+                />
                 <>
                   <MenuButton name="Download as CSV" onClick={() => {
                     fetch(`${ENDPOINT}/api/getTrafficData`, {
