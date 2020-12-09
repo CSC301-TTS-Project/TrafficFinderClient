@@ -62,26 +62,26 @@ const useStyles = makeStyles((theme) => ({
 export default function TransitionsModal() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const [checkedItems, setCheckedItems] = React.useState({});
+  // const [checkedItems, setCheckedItems] = React.useState({});
 
   const handleChange = (e) => {
-    setCheckedItems({
-      ...checkedItems,
-      [e.target.id]: e.target.checked,
-    });
-    console.log("checkedItems:", checkedItems);
+    // setCheckedItems({
+    //   ...checkedItems,
+    //   [e.target.id]: e.target.checked,
+    // });
+    // console.log("checkedItems:", checkedItems);
   };
 
   const saveDataBtn = (e) => {
-    e.preventDefault();
-    const dataPushArray = Object.entries(checkedItems).reduce(
-      (pre, [key, value]) => {
-        value && pre.push(key);
-        return pre;
-      },
-      []
-    );
-    console.log("dataPushArray:", dataPushArray);
+    // e.preventDefault();
+    // const dataPushArray = Object.entries(checkedItems).reduce(
+    //   (pre, [key, value]) => {
+    //     value && pre.push(key);
+    //     return pre;
+    //   },
+    //   []
+    // );
+    // console.log("dataPushArray:", dataPushArray);
   };
 
   const handleOpen = () => {
@@ -122,7 +122,7 @@ export default function TransitionsModal() {
                         id={`id_${index}`}
                         value={item}
                         onChange={handleChange}
-                        checked={checkedItems[item.id]}
+                        // checked={checkedItems[item.id]}
                         title={item}
                       />
                     </label>
