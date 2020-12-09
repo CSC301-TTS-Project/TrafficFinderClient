@@ -3,31 +3,54 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
-import MomentUtils from "@date-io/moment";
-
+import DateFnsUtils from "@date-io/date-fns";
+import { ThemeProvider } from "@material-ui/styles";
+import { createMuiTheme } from "@material-ui/core";
+import styles from "./Menu.module.css";
 import Grid from "@material-ui/core/Grid";
+
+const calendarTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#9a21f9",
+    },
+  },
+});
 export default class DateSelect extends Component {
   constructor(props) {
     super(props);
   }
+
   render() {
-    const { startDate, endDate } = this.props;
+    const { startDate, endDate, handleStartDate, handleEndDate } = this.props;
+    console.log(this.props);
     return (
-      <MuiPickersUtilsProvider utils={MomentUtils}>
-        <Grid container justify="space-around">
-          <KeyboardDatePicker
-            label="End Date"
-            format="MM/dd/yyyy"
-            margin="normal"
-            value={new Date()}
-          />
-          <KeyboardDatePicker
-            label="Start Date"
-            format="MM/dd/yyyy"
-            margin="normal"
-            value={new Date()}
-          />
-        </Grid>
+      <MuiPickersUtilsProvider utils={DateFnsUtils} style={styles.calendar}>
+        <ThemeProvider theme={calendarTheme}>
+          <Grid container justify="space-around" spacing={3}>
+            <Grid item xs={6}>
+              <KeyboardDatePicker
+                variant="inline"
+                label="Start Date"
+                format="MM/dd/yyyy"
+                margin="normal"
+                value={startDate}
+                onChange={handleStartDate}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <KeyboardDatePicker
+                disableToolbar
+                variant="inline"
+                label="End Date"
+                format="MM/dd/yyyy"
+                margin="normal"
+                value={endDate}
+                onChange={handleEndDate}
+              />
+            </Grid>
+          </Grid>
+        </ThemeProvider>
       </MuiPickersUtilsProvider>
     );
   }

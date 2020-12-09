@@ -55,11 +55,11 @@ export default class Menu extends Component {
     this.setState({ selectedEndHour: newEndHour });
   };
 
-  updateSelectedStartDate = (newStartDate) => {
+  handleStartDate = (newStartDate) => {
     this.setState({ selectedStartDate: newStartDate });
   };
 
-  updateSelectedEndDate = (newEndDate) => {
+  handleEndDate = (newEndDate) => {
     this.setState({ selectedEndDate: newEndDate });
   };
 
@@ -97,7 +97,12 @@ export default class Menu extends Component {
                   onEndValChange={this.updateSelectedEndHour}
                   upperBoundInclusive
                 />
-                <DateSelect />
+                <DateSelect
+                  handleStartDate={this.handleStartDate}
+                  handleEndDate={this.handleEndDate}
+                  startDate={this.state.selectedStartDate}
+                  endDate={this.state.selectedEndDate}
+                />
               </div>
               <div>
                 {/* hide select return values button and modal until integration for custom return values is implemented*/}

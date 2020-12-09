@@ -79,8 +79,8 @@
   background-color: #9a21f9;
   color: #ffffff;
 }
-.rangeContainer{
-  display:flex;
+.rangeContainer {
+  display: flex;
   justify-content: center;
 }
 .textRange {
@@ -195,4 +195,7 @@
 .primaryBtn:hover {
   opacity: 0.8;
   transition: all ease 150ms;
+}
+.calendar {
+  backgroundcolor: #9a21f9;
 }
