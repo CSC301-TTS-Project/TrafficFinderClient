@@ -19,7 +19,13 @@ export default class Menu extends Component {
       selectedStartHour: undefined,
       selectedEndHour: undefined,
       selectedStartDate: undefined, //eg "2018-09-01"
-      selectedEndDate: undefined //eg "2018-09-07"
+      selectedEndDate: undefined, //eg "2018-09-07",
+      // selected return values in this order:
+      // all selected by default (15 values + route num which is added on download request)
+      // num_days,link_obs,min_speed,mean_speed,max_speed,
+      // pct_50_speed,pct_85_speed,std_dev_speed,min_tt,mean_tt,max_tt,
+      // std_dev_tt,total_length,full_link_obs”
+      selectedReturnValues: Array.from({length: 15}, () => 1)  
     };
   }
 
@@ -62,6 +68,24 @@ export default class Menu extends Component {
 
   updateSelectedEndDate = (newEndDate) => {
     this.setState({ selectedEndDate: newEndDate })
+  }
+
+  updateSelectedReturnValues = (indexToUpdate) => {
+    const {selectedReturnValues} = this.state
+
+    const newSelectedReturnValues = selectedReturnValues.map(function (val, i) {
+      if(i === indexToUpdate){
+        if(val === 1) {
+          return 0
+        }
+        else {
+          return 1 // i === 0
+        } 
+      }
+      return val
+    })
+    
+    this.setState({selectedReturnValues: newSelectedReturnValues});
   }
 
 
@@ -108,7 +132,10 @@ export default class Menu extends Component {
               <div>
                 {/* hide select return values button and modal until integration for custom return values is implemented*/}
                 {/* will download all return values by default*/}
-                {/* <SelectReturnValues /> */}
+                <SelectReturnValues 
+                  selectedReturnValues={this.state.selectedReturnValues}
+                  onSelectedValuesChange={this.updateSelectedReturnValues}
+                />
                 <>
                   <MenuButton name="Download as CSV" onClick={() => {
                     fetch(`${ENDPOINT}/api/getTrafficData`, {
@@ -118,7 +145,9 @@ export default class Menu extends Component {
                         "date_range": [this.state.selectedStartDate, this.state.selectedEndDate],
                         "days_of_week": this.state.selectedDaysofWeek,
                         "hour_range": [Number(this.state.selectedStartHour), Number(this.state.selectedEndHour)],
-                        "selections": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] // 16 return values
+                        // for selections: '0' (corresponding to index 0) is for route_num 
+                        // (not selected by user but can be returned by back-end)
+                        "selections": [0, ...this.state.selectedReturnValues] 
                       })
                     }).then((response) => {
                       if (response.status !== 200) {

@@ -8,24 +8,29 @@ import Fade from "@material-ui/core/Fade";
 import styles from "./Menu.module.css";
 
 const checkLists = [
-  "Average travel time",
-  "Standard deviation of travel time",
-  "Min travel time",
-  "Max travel time",
-  "Min speed",
-  "Max speed",
-  "Median speed",
-  "85th percentile speed",
-  "95th percentile speed", 
-  "Sample count (observations and complete coverage)",
-  "Number of days",
+  // also included in output: route_num
+  "Number of days", // num_days
+  "Link observations (coverage)", // link_obs
+  "Minimum speed", //min_speed
+  "Mean speed", //mean_speed
+  "Maximum speed", // max_speed
+  "Median speed", // pct_50_speed
+  "85th percentile speed", // pct_85_speed
+  "95th percentile speed", //pct_95_speed
+  "Standard deviation of speed", // std_dev_speed
+  "Minimum travel time", // min_tt
+  "Mean travel time",// mean_tt
+  "Maximum travel time",// max_tt,
+  "Standard deviation of travel time",// std_dev_tt,
+  "Total length", // total_length,
+  "Full link observations (complete coverage)"// full_link_obs”
+]
 
-];
 
 const CheckBox = ({ id, value, checked, onChange, title }) => {
   return (
     <div>
-      <Checkbox checked={checked} color="default" />
+      <Checkbox checked={checked} color="default" onChange={onChange} />
       {/* <input
         className={}
         id={id}
@@ -54,30 +59,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TransitionsModal() {
+export default function TransitionsModal(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const [checkedItems, setCheckedItems] = React.useState({});
 
-  const handleChange = (e) => {
-    setCheckedItems({
-      ...checkedItems,
-      [e.target.id]: e.target.checked,
-    });
-    console.log("checkedItems:", checkedItems);
-  };
-
-  const saveDataBtn = (e) => {
-    e.preventDefault();
-    const dataPushArray = Object.entries(checkedItems).reduce(
-      (pre, [key, value]) => {
-        value && pre.push(key);
-        return pre;
-      },
-      []
-    );
-    console.log("dataPushArray:", dataPushArray);
-  };
+  const {selectedReturnValues, onSelectedValuesChange} = props
 
   const handleOpen = () => {
     setOpen(true);
@@ -109,15 +95,14 @@ export default function TransitionsModal() {
             <h1 className={styles.modalTitle}>Return Values</h1>
             <Grid container spacing={3}>
               {checkLists.map((item, index) => {
-                index = index + 1;
                 return (
                   <Grid item xs={6}>
                     <label htmlFor={`id_${index}`} key={`key_${index}`}>
                       <CheckBox
-                        id={`id_${index}`}
+                        id={index}
                         value={item}
-                        onChange={handleChange}
-                        checked={checkedItems[item.id]}
+                        onChange={()=>onSelectedValuesChange(index)}
+                        checked={selectedReturnValues[index] === 1}
                         title={item}
                       />
                     </label>
@@ -128,10 +113,9 @@ export default function TransitionsModal() {
             <div style={{ textAlign: "center", paddingTop: 10 }}>
               <button
                 className={styles.primaryBtn}
-                onClick={saveDataBtn}
                 onClick={handleClose}
               >
-                Save
+                Done
               </button>
             </div>
           </div>
