@@ -62,35 +62,8 @@ const useStyles = makeStyles((theme) => ({
 export default function TransitionsModal(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  // const [checkedItems, setCheckedItems] = React.useState({});
 
   const {selectedReturnValues, onSelectedValuesChange} = props
-  console.log("getting selected return values", selectedReturnValues)
-
-
-  const handleChange = (e) => {
-
-    // const {onSelectedValuesChange} = props
-    // onSelectedValuesChange(index)
-
-    // setCheckedItems({
-    //   ...checkedItems,
-    //   [e.target.id]: e.target.checked,
-    // });
-    // console.log("checkedItems:", checkedItems);
-  };
-
-  const saveDataBtn = (e) => {
-    // e.preventDefault();
-    // const dataPushArray = Object.entries(checkedItems).reduce(
-    //   (pre, [key, value]) => {
-    //     value && pre.push(key);
-    //     return pre;
-    //   },
-    //   []
-    // );
-    // console.log("dataPushArray:", dataPushArray);
-  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -140,10 +113,9 @@ export default function TransitionsModal(props) {
             <div style={{ textAlign: "center", paddingTop: 10 }}>
               <button
                 className={styles.primaryBtn}
-                onClick={saveDataBtn}
                 onClick={handleClose}
               >
-                Save
+                Done
               </button>
             </div>
           </div>
