@@ -5,6 +5,7 @@ import TimeSelect from "./TimeSelect.js";
 import MenuButton from "./MenuButton";
 import DateSelect from "./DateSelect";
 import SelectReturnValues from "./SelectReturnValues";
+import { format } from "date-fns";
 import ChevronRightOutlinedIcon from "@material-ui/icons/ChevronRightOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -19,8 +20,8 @@ export default class Menu extends Component {
       selectedDaysofWeek: [],
       selectedStartHour: undefined,
       selectedEndHour: undefined,
-      selectedStartDate: undefined, //eg "2018-09-01"
-      selectedEndDate: undefined, //eg "2018-09-07"
+      selectedStartDate: new Date("September, 01, 2018"), //eg "2018-09-01"
+      selectedEndDate: new Date("September, 07, 2018"), //eg "2018-09-07"
     };
   }
 
@@ -77,6 +78,10 @@ export default class Menu extends Component {
   handleEndDate = (newEndDate) => {
     this.setState({ selectedEndDate: newEndDate });
   };
+  formatDate = (date) => {
+    const newDate = format(date, "yyyy-MM-dd");
+    return format(date, "yyyy-MM-dd");
+  };
 
   render() {
     return (
@@ -131,8 +136,8 @@ export default class Menu extends Component {
                         body: JSON.stringify({
                           route: 0,
                           date_range: [
-                            this.state.selectedStartDate,
-                            this.state.selectedEndDate,
+                            this.formatDate(this.state.selectedStartDate),
+                            this.formatDate(this.state.selectedEndDate),
                           ],
                           days_of_week: this.state.selectedDaysofWeek,
                           hour_range: [
