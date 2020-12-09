@@ -19,7 +19,8 @@ export default class Menu extends Component {
       selectedStartHour: undefined,
       selectedEndHour: undefined,
       selectedStartDate: undefined, //eg "2018-09-01"
-      selectedEndDate: undefined //eg "2018-09-07"
+      selectedEndDate: undefined, //eg "2018-09-07",
+      selectedReturnValues: []
     };
   }
 
@@ -108,7 +109,7 @@ export default class Menu extends Component {
               <div>
                 {/* hide select return values button and modal until integration for custom return values is implemented*/}
                 {/* will download all return values by default*/}
-                <SelectReturnValues/>
+                <SelectReturnValues selectedReturnValues={this.state.selectedReturnValues}/>
                 <>
                   <MenuButton name="Download as CSV" onClick={() => {
                     fetch(`${ENDPOINT}/api/getTrafficData`, {

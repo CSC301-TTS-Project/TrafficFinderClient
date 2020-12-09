@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TransitionsModal() {
+export default function TransitionsModal(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   // const [checkedItems, setCheckedItems] = React.useState({});
@@ -92,6 +92,7 @@ export default function TransitionsModal() {
     setOpen(false);
   };
 
+  console.log("getting selected return values", props.selectedReturnValues)
   return (
     <div className={styles.menuBtnContainer}>
       <button className={styles.menuBtn} onClick={handleOpen}>
