@@ -8,22 +8,24 @@ import Fade from "@material-ui/core/Fade";
 import styles from "./Menu.module.css";
 
 const checkLists = [
-  // also included in output: route_num (always '0' for single segment)
-  "Mean travel time",
-  "Standard deviation of travel time",
-  "Min travel time",
-  "Max travel time",
-  "Mean speed",
-  "Standard deviation of speed",
-  "Min speed",
-  "Max speed",
-  "Median speed",
-  "85th percentile speed",
-  "95th percentile speed", 
-  "Number of days",
-  "Total length",
-  "Sample count (observations and complete coverage)" // counts as 2 values (link obs and full link obs)
-];
+  // also included in output: route_num
+  "Number of days", // num_days
+  "Link observations (coverage)", // link_obs
+  "Minimum speed", //min_speed
+  "Mean speed", //mean_speed
+  "Maximum speed", // max_speed
+  "Median speed", // pct_50_speed
+  "85th percentile speed", // pct_85_speed
+  "95th percentile speed", //pct_95_speed
+  "Standard deviation of speed", // std_dev_speed
+  "Minimum travel time", // min_tt
+  "Mean travel time",// mean_tt
+  "Maximum travel time",// max_tt,
+  "Standard deviation of travel time",// std_dev_tt,
+  "Total length", // total_length,
+  "Full link observations (complete coverage)"// full_link_obs”
+]
+
 
 const CheckBox = ({ id, value, checked, onChange, title }) => {
   return (
