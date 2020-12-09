@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import styles from "./Menu.module.css";
 import DaysOfWeek from "./DaysOfWeek";
-import RangeSelect from "./RangeSelect.js";
+import TimeSelect from "./TimeSelect.js";
 import MenuButton from "./MenuButton";
 import DateSelect from "./DateSelect";
 import SelectReturnValues from "./SelectReturnValues";
@@ -89,13 +89,12 @@ export default class Menu extends Component {
                 updateSelectedDays={this.updateSelectedDays}
               />
               <div>
-                <RangeSelect
+                <TimeSelect
                   title="Hour Range (0-23)"
                   startVal={this.state.selectedStartHour}
                   endVal={this.state.selectedEndHour}
                   onStartValChange={this.updateSelectedStartHour}
                   onEndValChange={this.updateSelectedEndHour}
-                  upperBoundInclusive
                 />
                 <DateSelect
                   handleStartDate={this.handleStartDate}

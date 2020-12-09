@@ -27,9 +27,11 @@ export default class DateSelect extends Component {
     return (
       <MuiPickersUtilsProvider utils={DateFnsUtils} style={styles.calendar}>
         <ThemeProvider theme={calendarTheme}>
+          <h4 class={styles.menuTitle}>Pick date</h4>
           <Grid container justify="space-around" spacing={3}>
             <Grid item xs={6}>
               <KeyboardDatePicker
+                disableToolbar
                 variant="inline"
                 label="Start Date"
                 format="MM/dd/yyyy"
