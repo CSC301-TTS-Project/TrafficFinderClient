@@ -70,26 +70,22 @@ export default class Menu extends Component {
     this.setState({ selectedEndDate: newEndDate })
   }
 
-  updateSelectedReturnValues = (index) => {
+  updateSelectedReturnValues = (indexToUpdate) => {
     const {selectedReturnValues} = this.state
-    let newSelectedReturnValues
 
-    console.log("index of value", index)
-    // if 1->0
-    // if (selectedReturnValues[index]=== 1) {
-    //   // newSelectedDays = selectedDaysofWeek.filter(function (day) {
-    //   //   return day !== dayToChange
-    //   // })
-    // }
-    // // if 0->1
-    // else {
-    //   newSelectedDays = [...selectedDaysofWeek]
-    //   newSelectedDays.push(dayToChange)
-
-    // }
-    // this.setState({
-    //   selectedReturnValues: newSelectedReturnValues,
-    // });
+    const newSelectedReturnValues = selectedReturnValues.map(function (val, i) {
+      if(i === indexToUpdate){
+        if(val === 1) {
+          return 0
+        }
+        else {
+          return 1 // i === 0
+        } 
+      }
+      return val
+    })
+    
+    this.setState({selectedReturnValues: newSelectedReturnValues});
   }
 
 

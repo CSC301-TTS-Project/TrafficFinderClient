@@ -122,7 +122,6 @@ export default function TransitionsModal(props) {
             <h1 className={styles.modalTitle}>Return Values</h1>
             <Grid container spacing={3}>
               {checkLists.map((item, index) => {
-                index = index;
                 return (
                   <Grid item xs={6}>
                     <label htmlFor={`id_${index}`} key={`key_${index}`}>
