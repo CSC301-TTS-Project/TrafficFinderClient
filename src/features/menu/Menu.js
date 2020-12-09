@@ -108,7 +108,7 @@ export default class Menu extends Component {
               <div>
                 {/* hide select return values button and modal until integration for custom return values is implemented*/}
                 {/* will download all return values by default*/}
-                {/* <SelectReturnValues /> */}
+                <SelectReturnValues/>
                 <>
                   <MenuButton name="Download as CSV" onClick={() => {
                     fetch(`${ENDPOINT}/api/getTrafficData`, {
@@ -119,6 +119,9 @@ export default class Menu extends Component {
                         "days_of_week": this.state.selectedDaysofWeek,
                         "hour_range": [Number(this.state.selectedStartHour), Number(this.state.selectedEndHour)],
                         "selections": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] // 16 return values
+                        // no link obs, no total length
+                        // "selections": [1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1] // 16 return values
+
                       })
                     }).then((response) => {
                       if (response.status !== 200) {
