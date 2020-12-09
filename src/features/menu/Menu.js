@@ -130,8 +130,6 @@ export default class Menu extends Component {
                 />
               </div>
               <div>
-                {/* hide select return values button and modal until integration for custom return values is implemented*/}
-                {/* will download all return values by default*/}
                 <SelectReturnValues 
                   selectedReturnValues={this.state.selectedReturnValues}
                   onSelectedValuesChange={this.updateSelectedReturnValues}
