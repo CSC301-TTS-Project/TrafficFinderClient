@@ -145,10 +145,7 @@ export default class Menu extends Component {
                         "date_range": [this.state.selectedStartDate, this.state.selectedEndDate],
                         "days_of_week": this.state.selectedDaysofWeek,
                         "hour_range": [Number(this.state.selectedStartHour), Number(this.state.selectedEndHour)],
-                        "selections": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] // 16 return values
-                        // no link obs, no total length
-                        // "selections": [1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1] // 16 return values
-
+                        "selections": this.state.selectedReturnValues
                       })
                     }).then((response) => {
                       if (response.status !== 200) {
