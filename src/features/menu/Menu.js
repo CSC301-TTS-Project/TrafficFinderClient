@@ -20,7 +20,6 @@ export default class Menu extends Component {
       selectedEndHour: undefined,
       selectedStartDate: undefined, //eg "2018-09-01"
       selectedEndDate: undefined, //eg "2018-09-07",
-
       // selected return values in this order:
       // all selected by default (15 values + route num which is added on download request)
       // num_days,link_obs,min_speed,mean_speed,max_speed,
