@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { ENDPOINT } from "./../requests";
+import { Link as RouterLink } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -93,7 +94,7 @@ export default function SignIn() {
           </Button>
           <Grid container>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link component={RouterLink} to="/signup" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
