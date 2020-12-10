@@ -44,7 +44,9 @@ export default function SignIn() {
     fetch(`${ENDPOINT}/api/login_user`, {
       method: "POST",
       body: fd
-    });
+    }).then((response) => {
+      console.log(response)
+    })
   }
 
   return (
