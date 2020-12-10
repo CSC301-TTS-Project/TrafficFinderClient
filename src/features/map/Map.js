@@ -1,6 +1,5 @@
 import React from "react";
 import mapboxgl from "mapbox-gl";
-import { getHereToken, getMapboxToken } from "./mapActions";
 import "./Map.module.css";
 import Menu from "../menu/Menu";
 import { ENDPOINT } from "./../requests";
@@ -8,8 +7,6 @@ import ReactDOM from "react-dom";
 import styles from "./Map.module.css";
 import { isEqual } from "lodash";
 import SelectInput from "@material-ui/core/Select/SelectInput";
-
-mapboxgl.accessToken = getMapboxToken();
 
 class Map extends React.Component {
   constructor(props) {
@@ -27,6 +24,92 @@ class Map extends React.Component {
       markerDeletionWindowOpen: false,
     };
   }
+
+  componentDidMount() {
+    fetch(`${ENDPOINT}/api/getKeys`, {
+      method: "POST",
+    }).then((response) => {
+      if (response.status !== 200) {
+        console.log("Internal error, status code: " + response.status);
+      } else {
+        response.json().then((data) => {
+          this.mapCreation(data['MAPBOX_PUBLIC_KEY'])
+        })
+      }
+    }).catch((error) => {
+      console.log("Could not fetch API keys: " + error);
+    });
+  }
+
+  componentWillUnmount() {
+    this.map.remove();
+  }
+
+  mapCreation = (mapToken) => {
+    mapboxgl.accessToken = mapToken;
+    this.map = new mapboxgl.Map({
+      container: this.container,
+      style: "mapbox://styles/mapbox/streets-v11",
+      center: [this.state.lng, this.state.lat],
+      zoom: this.state.zoom,
+    });
+
+    this.map.doubleClickZoom.disable();
+
+    // add line/segment
+    this.map.on("load", () => {
+      this.map.addSource("lines", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          // can draw multiple lines by including multiple objects inside features list
+          features: [],
+        },
+      });
+      this.map.addLayer({
+        id: "lines",
+        type: "line",
+        source: "lines",
+        paint: {
+          "line-width": 3,
+          // Use a get expression (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-get)
+          // to set the line-color to a feature property value.
+          "line-color": ["get", "color"],
+        },
+      });
+
+      fetch(`${ENDPOINT}/api/getRoute`, {
+        method: "POST",
+        //Fetch first and only route on map
+        body: JSON.stringify({ route: 0 }),
+      })
+          .then((response) => {
+            if (response.status !== 200) {
+              console.log("Internal error, status code: " + response.status);
+            } else {
+              response.json().then((data) => {
+                const pathNodes = data;
+                for (let i = 0; i < pathNodes.length; i++) {
+                  this.addMarker(pathNodes[i]);
+                }
+              });
+            }
+          })
+          .catch((error) => {
+            console.log("Could not get route data: " + error);
+          });
+    });
+    this.map.on("dblclick", (e) => {
+      if (e.originalEvent.button === 0) {
+        console.log(this.state.markerDeletionWindowOpen);
+        this.addToRoute(
+            e.lngLat,
+            this.state.route_index,
+            this.state.paths.length
+        );
+      }
+    });
+  };
 
   findMarkerIndex = (markerId) => {
     let deletionIndex = -1;
@@ -74,75 +157,7 @@ class Map extends React.Component {
     </div>
   );
 
-  componentDidMount() {
-    this.map = new mapboxgl.Map({
-      container: this.container,
-      style: "mapbox://styles/mapbox/streets-v11",
-      center: [this.state.lng, this.state.lat],
-      zoom: this.state.zoom,
-    });
-
-    this.map.doubleClickZoom.disable();
-
-    // add line/segment
-    this.map.on("load", () => {
-      this.map.addSource("lines", {
-        type: "geojson",
-        data: {
-          type: "FeatureCollection",
-          // can draw multiple lines by including multiple objects inside features list
-          features: [],
-        },
-      });
-      this.map.addLayer({
-        id: "lines",
-        type: "line",
-        source: "lines",
-        paint: {
-          "line-width": 3,
-          // Use a get expression (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-get)
-          // to set the line-color to a feature property value.
-          "line-color": ["get", "color"],
-        },
-      });
-      fetch(`${ENDPOINT}/api/getRoute`, {
-        method: "POST",
-        //Fetch first and only route on map
-        body: JSON.stringify({ route: 0 }),
-      })
-        .then((response) => {
-          if (response.status !== 200) {
-            console.log("Internal error, status code: " + response.status);
-          } else {
-            response.json().then((data) => {
-              const pathNodes = data;
-              for (let i = 0; i < pathNodes.length; i++) {
-                this.addMarker(pathNodes[i]);
-              }
-            });
-          }
-        })
-        .catch((error) => {
-          console.log("Could not get route data: " + error);
-        });
-    });
-
-    this.map.on("dblclick", (e) => {
-      if (e.originalEvent.button === 0) {
-        // wait until the the state.markerDeletionWindowOpen is updated when marker it self is been clicked
-        // the state.markerDeletionWindowOpen is updated at
-        // console.log("the marker itself has been clicked is");
-        console.log(this.state.markerDeletionWindowOpen);
-        this.addToRoute(
-          e.lngLat,
-          this.state.route_index,
-          this.state.paths.length
-        );
-      }
-    });
-  }
-
-  removePath = (index, paths, matchExact=false) => {
+  removePath = (index, paths, matchExact = false) => {
     const data = paths[index];
 
     console.log("Remove path " + index)
@@ -381,9 +396,6 @@ class Map extends React.Component {
       });
   }
 
-  componentWillUnmount() {
-    this.map.remove();
-  }
   render() {
     return (
       <div className={"map"} ref={(e) => (this.container = e)}>
