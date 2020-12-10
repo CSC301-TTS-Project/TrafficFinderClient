@@ -18,8 +18,8 @@ export default class Menu extends Component {
     this.state = {
       menuOpen: true,
       selectedDaysofWeek: [],
-      selectedStartHour: undefined,
-      selectedEndHour: undefined,
+      selectedStartHour: 7,
+      selectedEndHour: 19,
 
       selectedStartDate: new Date("September, 01, 2018"), //eg "2018-09-01", default value of calendar cannot be removed
       selectedEndDate: new Date("September, 07, 2018"), //eg "2018-09-07"
@@ -154,51 +154,60 @@ export default class Menu extends Component {
                 <>
                   <MenuButton
                     name="Download as CSV"
-                    onClick={() => {
-                      fetch(`${ENDPOINT}/api/getTrafficData`, {
-                        method: "POST",
-                        body: JSON.stringify({
-                          route: 0,
-                          date_range: [
-                            this.formatDate(this.state.selectedStartDate),
-                            this.formatDate(this.state.selectedEndDate),
-                          ],
-                          days_of_week: this.state.selectedDaysofWeek,
-                          hour_range: [
-                            Number(this.state.selectedStartHour),
-                            Number(this.state.selectedEndHour),
-                          ],
-                          // for selections: '0' (corresponding to index 0) is for route_num
-                          // (not selected by user but can be returned by back-end)
-                          selections: [0, ...this.state.selectedReturnValues],
-                        }),
-                      })
-                        .then((response) => {
-                          if (response.status !== 200) {
-                            console.log(
-                              "There was a problem, Status code: " +
-                                response.status
-                            );
-                            return;
-                          } else {
-                            return response.blob();
+                    onClick={
+                      //Check that selectedEndHour and selectedStartHour is filled
+                      this.state.selectedEndHour !== "" &&
+                      this.state.selectedStartHour !== ""
+                        ? () => {
+                            fetch(`${ENDPOINT}/api/getTrafficData`, {
+                              method: "POST",
+                              body: JSON.stringify({
+                                route: 0,
+                                date_range: [
+                                  this.formatDate(this.state.selectedStartDate),
+                                  this.formatDate(this.state.selectedEndDate),
+                                ],
+                                days_of_week: this.state.selectedDaysofWeek,
+                                hour_range: [
+                                  Number(this.state.selectedStartHour),
+                                  Number(this.state.selectedEndHour),
+                                ],
+                                // for selections: '0' (corresponding to index 0) is for route_num
+                                // (not selected by user but can be returned by back-end)
+                                selections: [
+                                  0,
+                                  ...this.state.selectedReturnValues,
+                                ],
+                              }),
+                            })
+                              .then((response) => {
+                                if (response.status !== 200) {
+                                  console.log(
+                                    "There was a problem, Status code: " +
+                                      response.status
+                                  );
+                                  return;
+                                } else {
+                                  return response.blob();
+                                }
+                              })
+                              .then((blob) => {
+                                const url = window.URL.createObjectURL(
+                                  new Blob([blob])
+                                );
+                                const link = document.createElement("a");
+                                link.href = url;
+                                link.setAttribute("download", "data.csv");
+                                document.body.appendChild(link);
+                                link.click();
+                                link.parentNode.removeChild(link);
+                              })
+                              .catch((error) => {
+                                console.log("Fetch error " + error);
+                              });
                           }
-                        })
-                        .then((blob) => {
-                          const url = window.URL.createObjectURL(
-                            new Blob([blob])
-                          );
-                          const link = document.createElement("a");
-                          link.href = url;
-                          link.setAttribute("download", "data.csv");
-                          document.body.appendChild(link);
-                          link.click();
-                          link.parentNode.removeChild(link);
-                        })
-                        .catch((error) => {
-                          console.log("Fetch error " + error);
-                        });
-                    }}
+                        : () => null
+                    }
                   />
                   <p style={{ margin: "0px", textAlign: "center" }}>
                     For data download:
