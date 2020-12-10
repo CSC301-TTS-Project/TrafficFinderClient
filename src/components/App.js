@@ -2,11 +2,26 @@ import React from 'react';
 import './App.css';
 import Map from "../features/map/Map"
 import SignIn from "../features/signin/SignIn.js"
-import { Route, Switch, BrowserRouter } from "react-router-dom";
+import { Route, Switch, BrowserRouter, Redirect } from "react-router-dom";
 
 const TITLE = "TrafficFinder"
 
 class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      isAuthenticated: false
+    }
+  }
+
+  loginCallback() {
+    this.setState({ isAuthenticated: true })
+  }
+
+  logoutCallback() {
+    this.setState({isAuthenticated: false})
+  }
 
   componentDidMount() {
     document.title = TITLE;
@@ -16,13 +31,13 @@ class App extends React.Component {
     return (
       <div className="App">
         <BrowserRouter>
-         <Switch>
-           <Route exact path="/signin" component={SignIn}/>
-           <Route path="/map" component={Map}/>
-         </Switch>
+          <Switch>
+            <Route exact path="/" render={() => { return this.state.isUserAuthenticated ? <Map/>: <SignIn/> }} />
+            <Route path="*" component={() => { (<h1>Page Not Found Page</h1>) }} />
+          </Switch>
         </BrowserRouter>
       </div>
-  );
+    );
   }
 }
 
