@@ -23,6 +23,7 @@ export default class DateSelect extends Component {
 
   render() {
     const { startDate, endDate, handleStartDate, handleEndDate } = this.props;
+    console.log(this.props);
     return (
       <MuiPickersUtilsProvider utils={DateFnsUtils} style={styles.calendar}>
         <ThemeProvider theme={calendarTheme}>
