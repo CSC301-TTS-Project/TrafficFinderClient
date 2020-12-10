@@ -19,13 +19,12 @@ const checkLists = [
   "95th percentile speed", //pct_95_speed
   "Standard deviation of speed", // std_dev_speed
   "Minimum travel time", // min_tt
-  "Mean travel time",// mean_tt
-  "Maximum travel time",// max_tt,
-  "Standard deviation of travel time",// std_dev_tt,
+  "Mean travel time", // mean_tt
+  "Maximum travel time", // max_tt,
+  "Standard deviation of travel time", // std_dev_tt,
   "Total length", // total_length,
-  "Full link observations (complete coverage)"// full_link_obs”
-]
-
+  "Full link observations (complete coverage)", // full_link_obs”
+];
 
 const CheckBox = ({ id, value, checked, onChange, title }) => {
   return (
@@ -63,7 +62,7 @@ export default function TransitionsModal(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
-  const {selectedReturnValues, onSelectedValuesChange} = props
+  const { selectedReturnValues, onSelectedValuesChange } = props;
 
   const handleOpen = () => {
     setOpen(true);
@@ -91,17 +90,17 @@ export default function TransitionsModal(props) {
         }}
       >
         <Fade in={open}>
-          <div className={classes.paper} style={{ width: 600 }}>
+          <div className={classes.paper} style={{ height: "80vh", width: 800 }}>
             <h1 className={styles.modalTitle}>Return Values</h1>
             <Grid container spacing={3}>
               {checkLists.map((item, index) => {
                 return (
-                  <Grid item xs={6}>
+                  <Grid item xs={4}>
                     <label htmlFor={`id_${index}`} key={`key_${index}`}>
                       <CheckBox
                         id={index}
                         value={item}
-                        onChange={()=>onSelectedValuesChange(index)}
+                        onChange={() => onSelectedValuesChange(index)}
                         checked={selectedReturnValues[index] === 1}
                         title={item}
                       />
@@ -111,10 +110,7 @@ export default function TransitionsModal(props) {
               })}
             </Grid>
             <div style={{ textAlign: "center", paddingTop: 10 }}>
-              <button
-                className={styles.primaryBtn}
-                onClick={handleClose}
-              >
+              <button className={styles.primaryBtn} onClick={handleClose}>
                 Done
               </button>
             </div>
