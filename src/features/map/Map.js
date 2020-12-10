@@ -7,7 +7,6 @@ import { ENDPOINT } from "./../requests";
 import ReactDOM from "react-dom";
 import styles from "./Map.module.css";
 import { isEqual } from "lodash";
-import SelectInput from "@material-ui/core/Select/SelectInput";
 
 mapboxgl.accessToken = getMapboxToken();
 

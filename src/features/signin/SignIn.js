@@ -1,5 +1,6 @@
 //A sign in page. Taken mostly from material-ui examples https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
 import React from 'react';
+import { useRef } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -10,6 +11,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { ENDPOINT } from "./../requests";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -34,6 +36,17 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn() {
   const classes = useStyles();
 
+  const form = useRef(null)
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    let fd = new FormData(form.current)
+    fetch(`${ENDPOINT}/api/login_user`, {
+      method: "POST",
+      body: fd
+    });
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -44,16 +57,16 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} ref={form} onSubmit={onSubmit} noValidate>
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
             autoFocus
           />
           <TextField

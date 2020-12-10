@@ -32,8 +32,10 @@ class App extends React.Component {
       <div className="App">
         <BrowserRouter>
           <Switch>
-            <Route exact path="/" render={() => { return this.state.isUserAuthenticated ? <Map/>: <SignIn/> }} />
-            <Route path="*" component={() => { (<h1>Page Not Found Page</h1>) }} />
+            <Route exact path="/" render={() => { return this.state.isUserAuthenticated ? <Redirect to="/map"/>: <Redirect to="/login"/>}} />
+            <Route exact path="/login" component={SignIn}/>
+            <Route exact path="/map" component={Map}/>
+            <Route path="*" component={() => { (<h1>Page Not Found</h1>) }} />
           </Switch>
         </BrowserRouter>
       </div>
