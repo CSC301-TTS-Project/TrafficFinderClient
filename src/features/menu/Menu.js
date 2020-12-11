@@ -8,11 +8,11 @@ import ChevronRightOutlinedIcon from "@material-ui/icons/ChevronRightOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 
 import "./Menu.module.css";
-import { ENDPOINT } from "../requests";
+import { ENDPOINT, authenticatedFetch } from "../requests";
 
 export default class Menu extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       menuOpen: true,
       selectedDaysofWeek: [],
@@ -111,7 +111,7 @@ export default class Menu extends Component {
                 {/* <SelectReturnValues /> */}
                 <>
                   <MenuButton name="Download as CSV" onClick={() => {
-                    fetch(`${ENDPOINT}/api/getTrafficData`, {
+                    authenticatedFetch(`${ENDPOINT}/api/getTrafficData`, this.props.usrAuthToken, {
                       method: "POST",
                       body: JSON.stringify({
                         "route": 0,

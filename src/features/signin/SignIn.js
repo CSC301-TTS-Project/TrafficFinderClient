@@ -47,12 +47,15 @@ export default function SignIn({loginCallbackFn}) {
       method: "POST",
       body: fd
     }).then((response) => {
-      console.log(response)
       if (response.status === 200) {
-        loginCallbackFn()
-        setRedirect(true)
+        return response.json()
       }
-    })
+    }).then((resp_json) => {
+      loginCallbackFn(resp_json['token'])
+      setRedirect(true)
+    }).catch((error) => {
+      console.log("Log in failed with " + error);
+    });
   }
 
   if (!redirect) {

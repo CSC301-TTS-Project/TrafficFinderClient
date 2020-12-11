@@ -9,15 +9,15 @@ const TITLE = "TrafficFinder"
 
 function App() {
 
-  const [isUserAuth, setUserAuth] = useState(false)
+  const [usrAuthToken, setUserAuthToken] = useState(null)
 
-  const loginCallback = () => {
+  const loginCallback = (token) => {
     console.log("callback")
-    setUserAuth(true)
+    setUserAuthToken(token)
   }
 
   const logoutCallback = () => {
-    setUserAuth(false)
+    setUserAuthToken(null)
   }
 
   useEffect(() => {
@@ -28,10 +28,10 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Switch>
-          <Route exact path="/" render={() => { return isUserAuth ? <Redirect to="/map" /> : <Redirect to="/login" /> }} />
+          <Route exact path="/" render={() => { return usrAuthToken !== null ? <Redirect to="/map" /> : <Redirect to="/login" /> }} />
           <Route exact path="/login"><SignIn loginCallbackFn={loginCallback} /></Route>
-          <Route exact path="/signup"><SignUp/></Route>
-          <Route exact path="/map" component={Map} />
+          <Route exact path="/signup"><SignUp /></Route>
+          <Route exact path="/map"> {usrAuthToken !== null ? (<Map usrAuthToken={usrAuthToken} />) : (<Redirect to="/login" />)}</Route>
           <Route path="*" component={() => { (<h1>Page Not Found</h1>) }} />
         </Switch>
       </BrowserRouter>
