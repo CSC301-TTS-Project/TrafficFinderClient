@@ -66,6 +66,8 @@ export default class Menu extends Component {
 
 
   render() {
+    const logoutCallback = this.props.logoutCallback;
+    console.log(logoutCallback)
     return (
       <>
         <ChevronRightOutlinedIcon
@@ -140,6 +142,7 @@ export default class Menu extends Component {
                     })
                   }
                   } />
+                  <MenuButton name="Logout" onClick={() => { logoutCallback() }} />
                   <p style={{ margin: '0px', textAlign: 'center' }}>
                     For data download:
                     <li>A segment must be drawn on the map</li>

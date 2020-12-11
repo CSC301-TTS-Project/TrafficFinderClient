@@ -387,7 +387,7 @@ class Map extends React.Component {
   render() {
       return (
         <div className={"map"} ref={(e) => (this.container = e)}>
-          <Menu usrAuthToken={this.props.usrAuthToken}/>
+          <Menu usrAuthToken={this.props.usrAuthToken} logoutCallback={this.props.logoutCallback}/>
         </div>
       );
   }

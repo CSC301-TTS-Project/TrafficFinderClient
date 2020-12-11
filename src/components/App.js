@@ -31,7 +31,7 @@ function App() {
           <Route exact path="/" render={() => { return usrAuthToken !== null ? <Redirect to="/map" /> : <Redirect to="/login" /> }} />
           <Route exact path="/login"><SignIn loginCallbackFn={loginCallback} /></Route>
           <Route exact path="/signup"><SignUp /></Route>
-          <Route exact path="/map"> {usrAuthToken !== null ? (<Map usrAuthToken={usrAuthToken} />) : (<Redirect to="/login" />)}</Route>
+          <Route exact path="/map"> {usrAuthToken !== null ? (<Map usrAuthToken={usrAuthToken} logoutCallback={()=> {logoutCallback()}} />) : (<Redirect to="/login" />)}</Route>
           <Route path="*" component={() => { (<h1>Page Not Found</h1>) }} />
         </Switch>
       </BrowserRouter>
