@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn(loginCallback) {
+export default function SignIn({loginCallbackFn}) {
   const classes = useStyles();
 
   const form = useRef(null)
@@ -49,12 +49,13 @@ export default function SignIn(loginCallback) {
     }).then((response) => {
       console.log(response)
       if (response.status === 200) {
-          setRedirect(true)
+        loginCallbackFn()
+        setRedirect(true)
       }
     })
   }
 
-  if(!redirect) {
+  if (!redirect) {
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -109,6 +110,6 @@ export default function SignIn(loginCallback) {
       </Container>
     );
   } else {
-    return <Redirect to="/"/>
+    return <Redirect to="/" />
   }
 }

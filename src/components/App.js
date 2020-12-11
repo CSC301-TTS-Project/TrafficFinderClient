@@ -30,7 +30,7 @@ function App() {
         <Switch>
           <Route exact path="/" render={() => { return isUserAuth ? <Redirect to="/map" /> : <Redirect to="/login" /> }} />
           <Route exact path="/login"><SignIn loginCallbackFn={loginCallback} /></Route>
-          <Route exact path="/signup"><SignUp loginCallbackFn={loginCallback} /></Route>
+          <Route exact path="/signup"><SignUp/></Route>
           <Route exact path="/map" component={Map} />
           <Route path="*" component={() => { (<h1>Page Not Found</h1>) }} />
         </Switch>
