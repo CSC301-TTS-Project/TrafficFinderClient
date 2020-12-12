@@ -154,13 +154,13 @@ export default class Menu extends Component {
                 />
                 <>
                   <MenuButton
-                    name="Download as CSV"
+                    name="Download GeoJson"
                     onClick={
                       //Check that selectedEndHour and selectedStartHour is filled
                       this.state.selectedEndHour !== "" &&
                         this.state.selectedStartHour !== ""
                         ? () => {
-                          authenticatedFetch(`${ENDPOINT}/api/getTrafficData`, this.props.usrAuthToken, {
+                          authenticatedFetch(`${ENDPOINT}/api/getGeoJson`, this.props.usrAuthToken, {
                             method: "POST",
                             body: JSON.stringify({
                               route: 0,
