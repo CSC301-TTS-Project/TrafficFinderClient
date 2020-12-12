@@ -27,22 +27,7 @@ class Map extends React.Component {
   }
 
   componentDidMount() {
-    authenticatedFetch(`${ENDPOINT}/api/getKeys`, this.props.usrAuthToken, {
-      method: "GET",
-    })
-      .then((response) => {
-        if (response.status !== 200) {
-          console.log("Internal error, status code: " + response.status);
-        } else {
-          response.json().then((data) => {
-            console.log(this, "Authenticated Fetch this");
-            this.mapCreation(data["MAPBOX_PUBLIC_KEY"]);
-          });
-        }
-      })
-      .catch((error) => {
-        console.log("Could not fetch API keys: " + error);
-      });
+    MapAPI.getAPIKeys(this)
   }
 
   componentWillUnmount() {
@@ -81,14 +66,7 @@ class Map extends React.Component {
           "line-color": ["get", "color"],
         },
       });
-      const pathData = MapAPI.getRoute(this.props.usrAuthToken);
-      if (pathData === null) {
-        return;
-      } else {
-        for (let i = 0; i < pathData.length; i++) {
-          this.addMarker(pathData[i]);
-        }
-      }
+      MapAPI.getRoute(this);
     });
     this.map.on("dblclick", (e) => {
       if (e.originalEvent.button === 0) {
@@ -151,7 +129,7 @@ class Map extends React.Component {
     return new mapboxgl.Popup().setDOMContent(placeholder).addTo(this.map);
   }
 
-  addMarker(obj, index) {
+  insertNode(obj, index) {
     // const { lng, lat } = lngLat;
     const lng = obj["end_node"]["lng"];
     const lat = obj["end_node"]["lat"];
@@ -215,22 +193,8 @@ class Map extends React.Component {
       lat,
       lng,
     };
-    authenticatedFetch(`${ENDPOINT}/api/insertNode`, this.props.usrAuthToken, {
-      method: "POST",
-      body: JSON.stringify(body),
-    })
-      .then((response) => {
-        if (response.status !== 200) {
-          console.log("There was a problem, Status code: " + response.status);
-          return;
-        }
-        response.json().then((data) => {
-          this.addMarker(data[index], index);
-        });
-      })
-      .catch((error) => {
-        console.log("Fetch error " + error);
-      });
+    MapAPI.insertNode(this, body, index)
+   
   }
 
   deleteFromRoute(route, index) {
@@ -238,22 +202,8 @@ class Map extends React.Component {
       index,
       route,
     };
-    authenticatedFetch(`${ENDPOINT}/api/deleteNode`, this.props.usrAuthToken, {
-      method: "DELETE",
-      body: JSON.stringify(body),
-    })
-      .then((response) => {
-        if (response.status !== 200) {
-          console.log("There was a problem, Status code: " + response.status);
-          return;
-        }
-        response.json().then((data) => {
-          this.removeMarker(data, index);
-        });
-      })
-      .catch((error) => {
-        console.log("Fetch error " + error);
-      });
+    MapAPI.deleteNode(this, body, index)
+   
   }
 
   removeMarker(data, index) {
@@ -287,37 +237,7 @@ class Map extends React.Component {
       lat,
       lng,
     };
-    authenticatedFetch(`${ENDPOINT}/api/modifyNode`, this.props.usrAuthToken, {
-      method: "PATCH",
-      body: JSON.stringify(body),
-    })
-      .then((response) => {
-        if (response.status !== 200) {
-          console.log("There was a problem, Status code: " + response.status);
-          return;
-        }
-        response.json().then((data) => {
-          console.log(data);
-          let new_paths = JSON.parse(JSON.stringify(this.state.paths));
-          for (let [idx, value] of Object.entries(data["segment_updates"])) {
-            if (parseInt(idx) > 0) {
-              console.log("Removing path: " + idx);
-              MapAPI.removePath(this.map, idx, new_paths, true);
-              new_paths[idx] = value;
-            }
-          }
-          for (let [idx, value] of Object.entries(data["segment_updates"])) {
-            if (parseInt(idx) > 0) {
-              MapAPI.drawPath(this.map, idx, new_paths);
-            }
-          }
-          markerCoordsCallback(data["new_node"].lng, data["new_node"].lat);
-          this.setState({ paths: new_paths });
-        });
-      })
-      .catch((error) => {
-        console.log("Fetch error " + error);
-      });
+    MapAPI.modifyNode(this, body, markerCoordsCallback)
   }
 
   render() {

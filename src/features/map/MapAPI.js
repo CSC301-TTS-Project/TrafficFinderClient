@@ -72,8 +72,8 @@ export const removePath = (map, index, paths, matchExact = false) => {
   console.log(map.getSource("lines")["_data"]);
 };
 
-export const getRoute = (authToken) => {
-  authenticatedFetch(`${ENDPOINT}/api/getRoute`, authToken, {
+export const getRoute = (app)=> {
+  authenticatedFetch(`${ENDPOINT}/api/getRoute`, app.props.usrAuthToken, {
     method: "POST",
     //Fetch first and only route on map
     body: JSON.stringify({ route: 0 }),
@@ -84,7 +84,9 @@ export const getRoute = (authToken) => {
       } else {
         response.json().then((data) => {
           const pathNodes = data;
-          return pathNodes;
+          for (let i = 0; i < pathNodes.length; i++) {
+            app.insertNode(pathNodes[i]);
+          }
         });
       }
     })
@@ -93,3 +95,93 @@ export const getRoute = (authToken) => {
       return null;
     });
 };
+
+export const getAPIKeys=  (app) => {
+  authenticatedFetch(`${ENDPOINT}/api/getKeys`, app.props.usrAuthToken, {
+  method: "GET",
+})
+  .then((response) => {
+    if (response.status !== 200) {
+      console.log("Internal error, status code: " + response.status);
+    } else {
+      response.json().then((data) => {
+        app.mapCreation(data["MAPBOX_PUBLIC_KEY"]);
+      });
+    }
+  })
+  .catch((error) => {
+    console.log("Could not fetch API keys: " + error);
+  });
+}
+
+export const insertNode = (app,body, index) => {
+  authenticatedFetch(`${ENDPOINT}/api/insertNode`, app.props.usrAuthToken, {
+    method: "POST",
+    body: JSON.stringify(body),
+  })
+    .then((response) => {
+      if (response.status !== 200) {
+        console.log("There was a problem, Status code: " + response.status);
+        return;
+      }
+      response.json().then((data) => {
+        app.insertNode(data[index], index);
+      });
+    })
+    .catch((error) => {
+      console.log("Fetch error " + error);
+    });
+}
+
+export const deleteNode = (app,body, index) => {
+  authenticatedFetch(`${ENDPOINT}/api/deleteNode`, app.props.usrAuthToken, {
+    method: "DELETE",
+    body: JSON.stringify(body),
+  })
+    .then((response) => {
+      if (response.status !== 200) {
+        console.log("There was a problem, Status code: " + response.status);
+        return;
+      }
+      response.json().then((data) => {
+        app.removeMarker(data, index);
+      });
+    })
+    .catch((error) => {
+      console.log("Fetch error " + error);
+    });
+}
+
+export const modifyNode = (app, body, markerCoordsCallback)=> {
+  authenticatedFetch(`${ENDPOINT}/api/modifyNode`, app.props.usrAuthToken, {
+    method: "PATCH",
+    body: JSON.stringify(body),
+  })
+    .then((response) => {
+      if (response.status !== 200) {
+        console.log("There was a problem, Status code: " + response.status);
+        return;
+      }
+      response.json().then((data) => {
+        console.log(data);
+        let new_paths = JSON.parse(JSON.stringify(app.state.paths));
+        for (let [idx, value] of Object.entries(data["segment_updates"])) {
+          if (parseInt(idx) > 0) {
+            console.log("Removing path: " + idx);
+            removePath(app.map, idx, new_paths, true);
+            new_paths[idx] = value;
+          }
+        }
+        for (let [idx, value] of Object.entries(data["segment_updates"])) {
+          if (parseInt(idx) > 0) {
+            drawPath(app.map, idx, new_paths);
+          }
+        }
+        markerCoordsCallback(data["new_node"].lng, data["new_node"].lat);
+        app.setState({ paths: new_paths });
+      });
+    })
+    .catch((error) => {
+      console.log("Fetch error " + error);
+    });
+}
