@@ -2,12 +2,9 @@ import React from "react";
 import mapboxgl from "mapbox-gl";
 import "./Map.module.css";
 import Menu from "../menu/Menu";
-import { ENDPOINT, authenticatedFetch } from "./../requests";
 import ReactDOM from "react-dom";
 import styles from "./Map.module.css";
 import * as MapAPI from "./MapAPI";
-import { isEqual } from "lodash";
-import { Redirect } from "react-router-dom";
 
 class Map extends React.Component {
   constructor(props) {
@@ -206,7 +203,7 @@ class Map extends React.Component {
    
   }
 
-  removeMarker(data, index) {
+  removeNode(data, index) {
     let new_paths = [];
     Object.assign(new_paths, this.state.paths);
     if (new_paths.length === 0) {

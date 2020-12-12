@@ -144,7 +144,7 @@ export const deleteNode = (app,body, index) => {
         return;
       }
       response.json().then((data) => {
-        app.removeMarker(data, index);
+        app.removeNode(data, index);
       });
     })
     .catch((error) => {
