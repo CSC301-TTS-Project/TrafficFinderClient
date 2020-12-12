@@ -10,11 +10,11 @@ import ChevronRightOutlinedIcon from "@material-ui/icons/ChevronRightOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 
 import "./Menu.module.css";
-import { ENDPOINT } from "../requests";
+import { ENDPOINT, authenticatedFetch } from "../requests";
 
 export default class Menu extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       menuOpen: true,
       selectedDaysofWeek: [],
@@ -107,6 +107,7 @@ export default class Menu extends Component {
   };
 
   render() {
+    const logoutCallback = this.props.logoutCallback;
     return (
       <>
         <ChevronRightOutlinedIcon
@@ -159,7 +160,7 @@ export default class Menu extends Component {
                       this.state.selectedEndHour !== "" &&
                       this.state.selectedStartHour !== ""
                         ? () => {
-                            fetch(`${ENDPOINT}/api/getTrafficData`, {
+                          authenticatedFetch(`${ENDPOINT}/api/getTrafficData`, this.props.usrAuthToken, {
                               method: "POST",
                               body: JSON.stringify({
                                 route: 0,
@@ -214,6 +215,7 @@ export default class Menu extends Component {
                     <li>A segment must be drawn on the map</li>
                     <li>All fields in the form must be filled in</li>
                   </p>
+                  <MenuButton name="Logout" onClick={() => { logoutCallback() }} />
                 </>
               </div>
             </div>

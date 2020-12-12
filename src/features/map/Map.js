@@ -2,11 +2,11 @@ import React from "react";
 import mapboxgl from "mapbox-gl";
 import "./Map.module.css";
 import Menu from "../menu/Menu";
-import { ENDPOINT } from "./../requests";
+import { ENDPOINT, authenticatedFetch } from "./../requests";
 import ReactDOM from "react-dom";
 import styles from "./Map.module.css";
 import { isEqual } from "lodash";
-import SelectInput from "@material-ui/core/Select/SelectInput";
+import { Redirect } from "react-router-dom";
 
 class Map extends React.Component {
   constructor(props) {
@@ -26,8 +26,8 @@ class Map extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`${ENDPOINT}/api/getKeys`, {
-      method: "POST",
+    authenticatedFetch(`${ENDPOINT}/api/getKeys`, this.props.usrAuthToken, {
+      method: "GET",
     }).then((response) => {
       if (response.status !== 200) {
         console.log("Internal error, status code: " + response.status);
@@ -77,8 +77,7 @@ class Map extends React.Component {
           "line-color": ["get", "color"],
         },
       });
-
-      fetch(`${ENDPOINT}/api/getRoute`, {
+      authenticatedFetch(`${ENDPOINT}/api/getRoute`, this.props.usrAuthToken, {
         method: "POST",
         //Fetch first and only route on map
         body: JSON.stringify({ route: 0 }),
@@ -292,7 +291,7 @@ class Map extends React.Component {
       lat,
       lng,
     };
-    fetch(`${ENDPOINT}/api/insertNode`, {
+    authenticatedFetch(`${ENDPOINT}/api/insertNode`, this.props.usrAuthToken, {
       method: "POST",
       body: JSON.stringify(body),
     })
@@ -315,7 +314,7 @@ class Map extends React.Component {
       index,
       route,
     };
-    fetch(`${ENDPOINT}/api/deleteNode`, {
+    authenticatedFetch(`${ENDPOINT}/api/deleteNode`, this.props.usrAuthToken, {
       method: "DELETE",
       body: JSON.stringify(body),
     })
@@ -363,7 +362,7 @@ class Map extends React.Component {
       lat,
       lng,
     };
-    fetch(`${ENDPOINT}/api/modifyNode`, {
+    authenticatedFetch(`${ENDPOINT}/api/modifyNode`, this.props.usrAuthToken, {
       method: "PATCH",
       body: JSON.stringify(body),
     })
@@ -397,11 +396,11 @@ class Map extends React.Component {
   }
 
   render() {
-    return (
-      <div className={"map"} ref={(e) => (this.container = e)}>
-        <Menu />
-      </div>
-    );
+      return (
+        <div className={"map"} ref={(e) => (this.container = e)}>
+          <Menu usrAuthToken={this.props.usrAuthToken} logoutCallback={this.props.logoutCallback}/>
+        </div>
+      );
   }
 }
 
