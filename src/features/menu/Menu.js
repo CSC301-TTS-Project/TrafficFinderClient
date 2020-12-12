@@ -158,55 +158,112 @@ export default class Menu extends Component {
                     onClick={
                       //Check that selectedEndHour and selectedStartHour is filled
                       this.state.selectedEndHour !== "" &&
-                      this.state.selectedStartHour !== ""
+                        this.state.selectedStartHour !== ""
                         ? () => {
                           authenticatedFetch(`${ENDPOINT}/api/getTrafficData`, this.props.usrAuthToken, {
-                              method: "POST",
-                              body: JSON.stringify({
-                                route: 0,
-                                date_range: [
-                                  this.formatDate(this.state.selectedStartDate),
-                                  this.formatDate(this.state.selectedEndDate),
-                                ],
-                                days_of_week: this.state.selectedDaysofWeek,
-                                hour_range: [
-                                  Number(this.state.selectedStartHour),
-                                  Number(this.state.selectedEndHour),
-                                ],
-                                // for selections: '0' (corresponding to index 0) is for route_num
-                                // (not selected by user but can be returned by back-end)
-                                selections: [
-                                  0,
-                                  ...this.state.selectedReturnValues,
-                                ],
-                              }),
-                            })
-                              .then((response) => {
-                                if (response.status !== 200) {
-                                  console.log(
-                                    "There was a problem, Status code: " +
-                                      response.status
-                                  );
-                                  return;
-                                } else {
-                                  return response.blob();
-                                }
-                              })
-                              .then((blob) => {
-                                const url = window.URL.createObjectURL(
-                                  new Blob([blob])
+                            method: "POST",
+                            body: JSON.stringify({
+                              route: 0,
+                              date_range: [
+                                this.formatDate(this.state.selectedStartDate),
+                                this.formatDate(this.state.selectedEndDate),
+                              ],
+                              days_of_week: this.state.selectedDaysofWeek,
+                              hour_range: [
+                                Number(this.state.selectedStartHour),
+                                Number(this.state.selectedEndHour),
+                              ],
+                              // for selections: '0' (corresponding to index 0) is for route_num
+                              // (not selected by user but can be returned by back-end)
+                              selections: [
+                                0,
+                                ...this.state.selectedReturnValues,
+                              ],
+                            }),
+                          })
+                            .then((response) => {
+                              if (response.status !== 200) {
+                                console.log(
+                                  "There was a problem, Status code: " +
+                                  response.status
                                 );
-                                const link = document.createElement("a");
-                                link.href = url;
-                                link.setAttribute("download", "data.csv");
-                                document.body.appendChild(link);
-                                link.click();
-                                link.parentNode.removeChild(link);
-                              })
-                              .catch((error) => {
-                                console.log("Fetch error " + error);
-                              });
-                          }
+                                return;
+                              } else {
+                                return response.blob();
+                              }
+                            })
+                            .then((blob) => {
+                              const url = window.URL.createObjectURL(
+                                new Blob([blob])
+                              );
+                              const link = document.createElement("a");
+                              link.href = url;
+                              link.setAttribute("download", "data.csv");
+                              document.body.appendChild(link);
+                              link.click();
+                              link.parentNode.removeChild(link);
+                            })
+                            .catch((error) => {
+                              console.log("Fetch error " + error);
+                            });
+                        }
+                        : () => null
+                    }
+                  />
+                  <MenuButton
+                    name="Download as CSV"
+                    onClick={
+                      //Check that selectedEndHour and selectedStartHour is filled
+                      this.state.selectedEndHour !== "" &&
+                        this.state.selectedStartHour !== ""
+                        ? () => {
+                          authenticatedFetch(`${ENDPOINT}/api/getTrafficData`, this.props.usrAuthToken, {
+                            method: "POST",
+                            body: JSON.stringify({
+                              route: 0,
+                              date_range: [
+                                this.formatDate(this.state.selectedStartDate),
+                                this.formatDate(this.state.selectedEndDate),
+                              ],
+                              days_of_week: this.state.selectedDaysofWeek,
+                              hour_range: [
+                                Number(this.state.selectedStartHour),
+                                Number(this.state.selectedEndHour),
+                              ],
+                              // for selections: '0' (corresponding to index 0) is for route_num
+                              // (not selected by user but can be returned by back-end)
+                              selections: [
+                                0,
+                                ...this.state.selectedReturnValues,
+                              ],
+                            }),
+                          })
+                            .then((response) => {
+                              if (response.status !== 200) {
+                                console.log(
+                                  "There was a problem, Status code: " +
+                                  response.status
+                                );
+                                return;
+                              } else {
+                                return response.blob();
+                              }
+                            })
+                            .then((blob) => {
+                              const url = window.URL.createObjectURL(
+                                new Blob([blob])
+                              );
+                              const link = document.createElement("a");
+                              link.href = url;
+                              link.setAttribute("download", "data.csv");
+                              document.body.appendChild(link);
+                              link.click();
+                              link.parentNode.removeChild(link);
+                            })
+                            .catch((error) => {
+                              console.log("Fetch error " + error);
+                            });
+                        }
                         : () => null
                     }
                   />
