@@ -10,20 +10,20 @@ import styles from "./Menu.module.css";
 const checkLists = [
   // also included in output: route_num
   "Number of days", // num_days
-  "Link observations (coverage)", // link_obs
+  "Link observations", // link_obs
   "Minimum speed", //min_speed
   "Mean speed", //mean_speed
   "Maximum speed", // max_speed
   "Median speed", // pct_50_speed
-  "85th percentile speed", // pct_85_speed
-  "95th percentile speed", //pct_95_speed
-  "Standard deviation of speed", // std_dev_speed
-  "Minimum travel time", // min_tt
+  "85th perc. speed", // pct_85_speed
+  "95th perc. speed", //pct_95_speed
+  "Std. dev. of speed", // std_dev_speed
+  "Min travel time", // min_tt
   "Mean travel time", // mean_tt
-  "Maximum travel time", // max_tt,
-  "Standard deviation of travel time", // std_dev_tt,
+  "Max travel time", // max_tt,
+  "Std. dev. of Travel Time", // std_dev_tt,
   "Total length", // total_length,
-  "Full link observations (complete coverage)", // full_link_obs”
+  "Full Link Observations", // full_link_obs”
 ];
 
 const CheckBox = ({ id, value, checked, onChange, title }) => {
