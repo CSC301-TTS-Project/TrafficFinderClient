@@ -164,21 +164,6 @@ export default class Menu extends Component {
                             method: "POST",
                             body: JSON.stringify({
                               route: 0,
-                              date_range: [
-                                this.formatDate(this.state.selectedStartDate),
-                                this.formatDate(this.state.selectedEndDate),
-                              ],
-                              days_of_week: this.state.selectedDaysofWeek,
-                              hour_range: [
-                                Number(this.state.selectedStartHour),
-                                Number(this.state.selectedEndHour),
-                              ],
-                              // for selections: '0' (corresponding to index 0) is for route_num
-                              // (not selected by user but can be returned by back-end)
-                              selections: [
-                                0,
-                                ...this.state.selectedReturnValues,
-                              ],
                             }),
                           })
                             .then((response) => {
@@ -198,7 +183,7 @@ export default class Menu extends Component {
                               );
                               const link = document.createElement("a");
                               link.href = url;
-                              link.setAttribute("download", "data.csv");
+                              link.setAttribute("download", "data.geojson");
                               document.body.appendChild(link);
                               link.click();
                               link.parentNode.removeChild(link);
@@ -255,7 +240,7 @@ export default class Menu extends Component {
                               );
                               const link = document.createElement("a");
                               link.href = url;
-                              link.setAttribute("download", "data.csv");
+                              link.setAttribute("download", "data.");
                               document.body.appendChild(link);
                               link.click();
                               link.parentNode.removeChild(link);
