@@ -248,7 +248,7 @@ class Map extends React.Component {
       route,
     };
     authenticatedFetch(`${ENDPOINT}/api/deleteNode`, this.props.usrAuthToken, {
-      method: "POST",
+      method: "DELETE",
       body: JSON.stringify(body),
     })
       .then((response) => {
