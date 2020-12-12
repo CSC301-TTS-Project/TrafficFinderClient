@@ -240,7 +240,7 @@ export default class Menu extends Component {
                               );
                               const link = document.createElement("a");
                               link.href = url;
-                              link.setAttribute("download", "data.");
+                              link.setAttribute("download", "data.csv");
                               document.body.appendChild(link);
                               link.click();
                               link.parentNode.removeChild(link);
