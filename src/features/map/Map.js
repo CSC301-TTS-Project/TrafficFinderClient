@@ -2,11 +2,13 @@ import React from "react";
 import mapboxgl from "mapbox-gl";
 import "./Map.module.css";
 import Menu from "../menu/Menu";
-import { ENDPOINT } from "./../requests";
+import { ENDPOINT, authenticatedFetch } from "./../requests";
 import ReactDOM from "react-dom";
 import styles from "./Map.module.css";
 import drawPath from './DrawPath';
 import removePath from './RemovePath';
+import { isEqual } from "lodash";
+import { Redirect } from "react-router-dom";
 
 class Map extends React.Component {
   constructor(props) {
@@ -26,8 +28,8 @@ class Map extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`${ENDPOINT}/api/getKeys`, {
-      method: "POST",
+    authenticatedFetch(`${ENDPOINT}/api/getKeys`, this.props.usrAuthToken, {
+      method: "GET",
     }).then((response) => {
       if (response.status !== 200) {
         console.log("Internal error, status code: " + response.status);
@@ -77,35 +79,34 @@ class Map extends React.Component {
           "line-color": ["get", "color"],
         },
       });
-
-      fetch(`${ENDPOINT}/api/getRoute`, {
+      authenticatedFetch(`${ENDPOINT}/api/getRoute`, this.props.usrAuthToken, {
         method: "POST",
         //Fetch first and only route on map
         body: JSON.stringify({ route: 0 }),
       })
-          .then((response) => {
-            if (response.status !== 200) {
-              console.log("Internal error, status code: " + response.status);
-            } else {
-              response.json().then((data) => {
-                const pathNodes = data;
-                for (let i = 0; i < pathNodes.length; i++) {
-                  this.addMarker(pathNodes[i]);
-                }
-              });
-            }
-          })
-          .catch((error) => {
-            console.log("Could not get route data: " + error);
-          });
+        .then((response) => {
+          if (response.status !== 200) {
+            console.log("Internal error, status code: " + response.status);
+          } else {
+            response.json().then((data) => {
+              const pathNodes = data;
+              for (let i = 0; i < pathNodes.length; i++) {
+                this.addMarker(pathNodes[i]);
+              }
+            });
+          }
+        })
+        .catch((error) => {
+          console.log("Could not get route data: " + error);
+        });
     });
     this.map.on("dblclick", (e) => {
       if (e.originalEvent.button === 0) {
         console.log(this.state.markerDeletionWindowOpen);
         this.addToRoute(
-            e.lngLat,
-            this.state.route_index,
-            this.state.paths.length
+          e.lngLat,
+          this.state.route_index,
+          this.state.paths.length
         );
       }
     });
@@ -209,7 +210,7 @@ class Map extends React.Component {
       newPaths.push(obj);
       this.setState(
         { paths: newPaths },
-         drawPath(this.map, this.state.paths.length - 1, this.state.paths),
+        drawPath(this.map, this.state.paths.length - 1, this.state.paths),
       );
     }
   }
@@ -223,7 +224,7 @@ class Map extends React.Component {
       lat,
       lng,
     };
-    fetch(`${ENDPOINT}/api/insertNode`, {
+    authenticatedFetch(`${ENDPOINT}/api/insertNode`, this.props.usrAuthToken, {
       method: "POST",
       body: JSON.stringify(body),
     })
@@ -246,8 +247,8 @@ class Map extends React.Component {
       index,
       route,
     };
-    fetch(`${ENDPOINT}/api/deleteNode`, {
-      method: "DELETE",
+    authenticatedFetch(`${ENDPOINT}/api/deleteNode`, this.props.usrAuthToken, {
+      method: "POST",
       body: JSON.stringify(body),
     })
       .then((response) => {
@@ -294,7 +295,7 @@ class Map extends React.Component {
       lat,
       lng,
     };
-    fetch(`${ENDPOINT}/api/modifyNode`, {
+    authenticatedFetch(`${ENDPOINT}/api/modifyNode`, this.props.usrAuthToken, {
       method: "PATCH",
       body: JSON.stringify(body),
     })
@@ -330,7 +331,7 @@ class Map extends React.Component {
   render() {
     return (
       <div className={"map"} ref={(e) => (this.container = e)}>
-        <Menu />
+        <Menu usrAuthToken={this.props.usrAuthToken} logoutCallback={this.props.logoutCallback} />
       </div>
     );
   }
