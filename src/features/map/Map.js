@@ -5,8 +5,7 @@ import Menu from "../menu/Menu";
 import { ENDPOINT, authenticatedFetch } from "./../requests";
 import ReactDOM from "react-dom";
 import styles from "./Map.module.css";
-import drawPath from './DrawPath';
-import removePath from './RemovePath';
+import * as MapAPI from "./MapAPI";
 import { isEqual } from "lodash";
 import { Redirect } from "react-router-dom";
 
@@ -30,17 +29,20 @@ class Map extends React.Component {
   componentDidMount() {
     authenticatedFetch(`${ENDPOINT}/api/getKeys`, this.props.usrAuthToken, {
       method: "GET",
-    }).then((response) => {
-      if (response.status !== 200) {
-        console.log("Internal error, status code: " + response.status);
-      } else {
-        response.json().then((data) => {
-          this.mapCreation(data['MAPBOX_PUBLIC_KEY'])
-        })
-      }
-    }).catch((error) => {
-      console.log("Could not fetch API keys: " + error);
-    });
+    })
+      .then((response) => {
+        if (response.status !== 200) {
+          console.log("Internal error, status code: " + response.status);
+        } else {
+          response.json().then((data) => {
+            console.log(this, "Authenticated Fetch this");
+            this.mapCreation(data["MAPBOX_PUBLIC_KEY"]);
+          });
+        }
+      })
+      .catch((error) => {
+        console.log("Could not fetch API keys: " + error);
+      });
   }
 
   componentWillUnmount() {
@@ -79,26 +81,14 @@ class Map extends React.Component {
           "line-color": ["get", "color"],
         },
       });
-      authenticatedFetch(`${ENDPOINT}/api/getRoute`, this.props.usrAuthToken, {
-        method: "POST",
-        //Fetch first and only route on map
-        body: JSON.stringify({ route: 0 }),
-      })
-        .then((response) => {
-          if (response.status !== 200) {
-            console.log("Internal error, status code: " + response.status);
-          } else {
-            response.json().then((data) => {
-              const pathNodes = data;
-              for (let i = 0; i < pathNodes.length; i++) {
-                this.addMarker(pathNodes[i]);
-              }
-            });
-          }
-        })
-        .catch((error) => {
-          console.log("Could not get route data: " + error);
-        });
+      const pathData = MapAPI.getRoute(this.props.usrAuthToken);
+      if (pathData === null) {
+        return;
+      } else {
+        for (let i = 0; i < pathData.length; i++) {
+          this.addMarker(pathData[i]);
+        }
+      }
     });
     this.map.on("dblclick", (e) => {
       if (e.originalEvent.button === 0) {
@@ -114,18 +104,14 @@ class Map extends React.Component {
 
   findMarkerIndex = (markerId) => {
     let deletionIndex = -1;
-    for (
-      let index = 0;
-      index < this.state.orderedMarkerIds.length;
-      index++
-    ) {
+    for (let index = 0; index < this.state.orderedMarkerIds.length; index++) {
       if (markerId === this.state.orderedMarkerIds[index]) {
         deletionIndex = index;
         break;
       }
     }
-    return deletionIndex
-  }
+    return deletionIndex;
+  };
 
   markerDeletionWindow = (markerId) => (
     <div className={styles.popUpContents}>
@@ -139,7 +125,7 @@ class Map extends React.Component {
             marker.remove();
 
             // find the index of the deletion marker in the path
-            let deletionIndex = this.findMarkerIndex(markerId)
+            let deletionIndex = this.findMarkerIndex(markerId);
             const routeId = 0;
             this.deleteFromRoute(routeId, deletionIndex);
 
@@ -193,10 +179,15 @@ class Map extends React.Component {
       console.log(nodeIndex);
     });
 
-    new_node.on('dragend', () => {
-      this.modifyRoute(new_node.getLngLat(), 0, this.findMarkerIndex(nodeIndex), (lng, lat) => {
-        new_node.setLngLat([lng, lat])
-      })
+    new_node.on("dragend", () => {
+      this.modifyRoute(
+        new_node.getLngLat(),
+        0,
+        this.findMarkerIndex(nodeIndex),
+        (lng, lat) => {
+          new_node.setLngLat([lng, lat]);
+        }
+      );
     });
 
     if (!this.state.isBuildingPath) {
@@ -210,7 +201,7 @@ class Map extends React.Component {
       newPaths.push(obj);
       this.setState(
         { paths: newPaths },
-        drawPath(this.map, this.state.paths.length - 1, this.state.paths),
+        MapAPI.drawPath(this.map, this.state.paths.length - 1, this.state.paths)
       );
     }
   }
@@ -271,16 +262,17 @@ class Map extends React.Component {
     if (new_paths.length === 0) {
       return;
     }
-    removePath(this.map, index, this.state.paths);
+
+    MapAPI.removePath(this.map, index, this.state.paths);
     new_paths.splice(index, 1);
     for (const [idx, value] of Object.entries(data)) {
-      removePath(this.map, idx, this.state.paths);
+      MapAPI.removePath(this.map, idx, this.state.paths);
       new_paths[idx] = value;
       this.setState({ paths: new_paths });
       if (new_paths.length === 0) {
         return;
       }
-      drawPath(this.map, idx, this.state.paths);
+      MapAPI.drawPath(this.map, idx, this.state.paths);
     }
     this.setState({
       paths: new_paths,
@@ -309,14 +301,14 @@ class Map extends React.Component {
           let new_paths = JSON.parse(JSON.stringify(this.state.paths));
           for (let [idx, value] of Object.entries(data["segment_updates"])) {
             if (parseInt(idx) > 0) {
-              console.log("Removing path: " + idx)
-              removePath(this.map, idx, new_paths, true);
+              console.log("Removing path: " + idx);
+              MapAPI.removePath(this.map, idx, new_paths, true);
               new_paths[idx] = value;
             }
           }
           for (let [idx, value] of Object.entries(data["segment_updates"])) {
             if (parseInt(idx) > 0) {
-              drawPath(this.map, idx, new_paths);
+              MapAPI.drawPath(this.map, idx, new_paths);
             }
           }
           markerCoordsCallback(data["new_node"].lng, data["new_node"].lat);
@@ -331,7 +323,10 @@ class Map extends React.Component {
   render() {
     return (
       <div className={"map"} ref={(e) => (this.container = e)}>
-        <Menu usrAuthToken={this.props.usrAuthToken} logoutCallback={this.props.logoutCallback} />
+        <Menu
+          usrAuthToken={this.props.usrAuthToken}
+          logoutCallback={this.props.logoutCallback}
+        />
       </div>
     );
   }
