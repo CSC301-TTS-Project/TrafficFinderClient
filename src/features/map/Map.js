@@ -26,8 +26,8 @@ class Map extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`${ENDPOINT}/api/getKeys`, {
-      method: "POST",
+    authenticatedFetch(`${ENDPOINT}/api/getKeys`, this.props.usrAuthToken, {
+      method: "GET",
     }).then((response) => {
       if (response.status !== 200) {
         console.log("Internal error, status code: " + response.status);

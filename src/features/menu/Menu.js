@@ -108,7 +108,6 @@ export default class Menu extends Component {
 
   render() {
     const logoutCallback = this.props.logoutCallback;
-    console.log(logoutCallback)
     return (
       <>
         <ChevronRightOutlinedIcon
@@ -216,6 +215,7 @@ export default class Menu extends Component {
                     <li>A segment must be drawn on the map</li>
                     <li>All fields in the form must be filled in</li>
                   </p>
+                  <MenuButton name="Logout" onClick={() => { logoutCallback() }} />
                 </>
               </div>
             </div>
