@@ -18,11 +18,11 @@ export default class Menu extends Component {
     this.state = {
       menuOpen: true,
       selectedDaysofWeek: [],
-      selectedStartHour: 7,
-      selectedEndHour: 19,
+      selectedStartHour: undefined,
+      selectedEndHour: undefined,
 
-      selectedStartDate: new Date("September, 01, 2018"), //eg "2018-09-01", default value of calendar cannot be removed
-      selectedEndDate: new Date("September, 07, 2018"), //eg "2018-09-07"
+      selectedStartDate: new Date(), //eg "2018-09-01", default value of calendar cannot be removed
+      selectedEndDate: new Date(), //eg "2018-09-07"
       // selected return values in this order:
       // all selected by default (15 values + route num which is added on download request)
       // num_days,link_obs,min_speed,mean_speed,max_speed,
